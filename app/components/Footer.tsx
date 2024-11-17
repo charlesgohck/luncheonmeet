@@ -17,7 +17,7 @@ export function Footer() {
                 <p>
                     Luncheon Meet
                     <br />
-                    Spontaneous connections for People for Lunch, Coffee, and Activities.
+                    Making Connections for Lunch and Other Activies.
                 </p>
             </aside>
             <nav>
