@@ -1,5 +1,6 @@
 import { auth, signIn } from "@/auth"
 import Image from "next/image";
+import { SignOut } from "./SignOut";
 
 export async function NavBar() {
 
@@ -46,17 +47,7 @@ export async function NavBar() {
                                     <Image src={profileImage} width={50} height={50} alt={"Profile Picture"}/>
                                 </div>
                             </div>
-                            <ul
-                                tabIndex={0}
-                                className="menu menu-sm dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-52 p-2 shadow">
-                                <li>
-                                    <a className="justify-between">
-                                        Profile
-                                        <span className="badge">New</span>
-                                    </a>
-                                </li>
-                                <li><a>Logout</a></li>
-                            </ul>
+                            <SignOut/>
                         </div>
                     ) : (
                         <div>
