@@ -1,6 +1,6 @@
 import { auth, signIn } from "@/auth"
 import Image from "next/image";
-import { SignOut } from "./SignOut";
+import { SignOutProfileLinks } from "./SignOut";
 
 export async function NavBar() {
 
@@ -36,7 +36,9 @@ export async function NavBar() {
                 </div>
             </div>
             <div className="navbar-center">
-                <a className="btn btn-ghost text-xl">LuncheonMeet</a>
+                <a className="btn btn-ghost text-xl">
+                    <Image src={"/images/Logo.png"} alt={"Luncheon Meet Logo"} width={50} height={50}/>
+                </a>
             </div>
             <div className="navbar-end">
                 {
@@ -47,7 +49,7 @@ export async function NavBar() {
                                     <Image src={profileImage} width={50} height={50} alt={"Profile Picture"}/>
                                 </div>
                             </div>
-                            <SignOut/>
+                            <SignOutProfileLinks/>
                         </div>
                     ) : (
                         <div>
