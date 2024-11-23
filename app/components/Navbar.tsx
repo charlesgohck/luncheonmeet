@@ -1,8 +1,10 @@
 import { auth, signIn } from "@/auth"
+import Image from "next/image";
 
 export async function NavBar() {
 
     const session = await auth();
+    const profileImage = session && session.user && session.user.image ? session.user.image : "https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp";
     console.log(session);
 
     return (
@@ -41,10 +43,7 @@ export async function NavBar() {
                         <div className="dropdown dropdown-end">
                             <div tabIndex={0} role="button" className="btn btn-ghost btn-circle avatar">
                                 <div className="w-10 rounded-full">
-                                    <img
-                                        alt="Profile Photo from SSO"
-                                        src={session.user.image ? session.user.image : "https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp"} 
-                                    />
+                                    <Image src={profileImage} width={50} height={50} alt={"Profile Picture"}/>
                                 </div>
                             </div>
                             <ul
