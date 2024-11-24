@@ -6,7 +6,6 @@ export async function NavBar() {
 
     const session = await auth();
     const profileImage = session && session.user && session.user.image ? session.user.image : "https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp";
-    console.log(session);
 
     return (
         <div className="navbar bg-base-100">
@@ -59,7 +58,7 @@ export async function NavBar() {
                                     await signIn("google")
                                 }}
                             >
-                                <button className="btn btn-primary" type="submit">Sign In with Google</button>
+                                <button className="btn btn-primary btn-outline" type="submit">Sign In with Google</button>
                             </form>
 
                         </div>
