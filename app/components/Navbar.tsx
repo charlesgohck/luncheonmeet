@@ -1,6 +1,7 @@
 import { auth, signIn } from "@/auth"
 import Image from "next/image";
 import { SignOutProfileLinks } from "./SignOut";
+import Link from "next/link";
 
 export async function NavBar() {
 
@@ -11,7 +12,7 @@ export async function NavBar() {
         <div className="navbar bg-base-100">
             <div className="navbar-start">
                 <div className="dropdown">
-                    <div tabIndex={0} role="button" className="btn btn-ghost btn-circle">
+                    <div tabIndex={0} role="button" className="btn btn-ghost btn-circle lg:hidden">
                         <svg
                             xmlns="http://www.w3.org/2000/svg"
                             className="h-5 w-5"
@@ -33,11 +34,24 @@ export async function NavBar() {
                         <li><a>About</a></li>
                     </ul>
                 </div>
+                <Link className="btn btn-ghost text-xl" href={"/"}>
+                    <Image src={"/images/Logo.png"} alt={"Luncheon Meet Logo"} width={50} height={50} />
+                </Link>
             </div>
-            <div className="navbar-center">
-                <a className="btn btn-ghost text-xl">
-                    <Image src={"/images/Logo.png"} alt={"Luncheon Meet Logo"} width={50} height={50}/>
-                </a>
+            <div className="navbar-center hidden lg:flex">
+                <ul className="menu menu-horizontal px-1">
+                    <li><a>Item 1</a></li>
+                    <li>
+                        <details>
+                            <summary>Parent</summary>
+                            <ul className="p-2">
+                                <li><a>Submenu 1</a></li>
+                                <li><a>Submenu 2</a></li>
+                            </ul>
+                        </details>
+                    </li>
+                    <li><a>Item 3</a></li>
+                </ul>
             </div>
             <div className="navbar-end">
                 {
@@ -45,10 +59,10 @@ export async function NavBar() {
                         <div className="dropdown dropdown-end">
                             <div tabIndex={0} role="button" className="btn btn-ghost btn-circle avatar">
                                 <div className="w-10 rounded-full">
-                                    <Image src={profileImage} width={50} height={50} alt={"Profile Picture"}/>
+                                    <Image src={profileImage} width={50} height={50} alt={"Profile Picture"} />
                                 </div>
                             </div>
-                            <SignOutProfileLinks/>
+                            <SignOutProfileLinks />
                         </div>
                     ) : (
                         <div>

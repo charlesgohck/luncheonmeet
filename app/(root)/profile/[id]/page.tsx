@@ -18,7 +18,7 @@ export default async function Profile({ id }: { id: String }) {
                     <div className="label">
                         <span className="label-text">About Me</span>
                     </div>
-                    <textarea className="textarea textarea-bordered h-24" placeholder="Write about yourself."></textarea>
+                    <textarea className="textarea textarea-bordered h-24" placeholder="Write about me"></textarea>
                     <br/>
                     <button className="btn btn-outline btn-primary">Save</button>
                 </label>
