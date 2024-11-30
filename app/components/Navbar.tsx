@@ -2,10 +2,28 @@ import { auth, signIn } from "@/auth"
 import Image from "next/image";
 import { SignOutProfileLinks } from "./SignOut";
 import Link from "next/link";
+import { Session } from "next-auth";
+import { dbPool } from '@/app/lib/db';
 
-export async function NavBar() {
+async function signInAction() {
+    "use server"
+    await signIn("google");
+}
+
+async function checkOrAddUser(session: Session) {
+    console.log("Attempting to add new user");
+    const client = await dbPool.connect();
+    const result = await client.query("SELECT NOW()");
+    console.log(result);
+    client.release();
+}
+
+export async function AuthNavBar() {
 
     const session = await auth();
+    if (session) {
+        checkOrAddUser(session);
+    }
     const profileImage = session && session.user && session.user.image ? session.user.image : "https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp";
 
     return (
@@ -67,10 +85,7 @@ export async function NavBar() {
                     ) : (
                         <div>
                             <form
-                                action={async () => {
-                                    "use server"
-                                    await signIn("google")
-                                }}
+                                action={signInAction}
                             >
                                 <button className="btn btn-primary btn-outline" type="submit">Sign In with Google</button>
                             </form>

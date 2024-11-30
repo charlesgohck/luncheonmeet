@@ -5,6 +5,7 @@ export default async function Profile({ id }: { id: String }) {
 
     const session = await auth();
     const profileImage = session && session.user && session.user.image ? session.user.image : "https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp";
+    console.log(session);
 
     return (
         <section className="p5">
