@@ -3,7 +3,7 @@ import Image from "next/image";
 import { SignOutProfileLinks } from "./SignOut";
 import Link from "next/link";
 import { Session } from "next-auth";
-import { dbPool } from '@/app/lib/db';
+import { getUserDetails } from '@/app/lib/db';
 
 async function signInAction() {
     "use server"
@@ -11,11 +11,12 @@ async function signInAction() {
 }
 
 async function checkOrAddUser(session: Session) {
-    console.log("Attempting to add new user");
-    const client = await dbPool.connect();
-    const result = await client.query("SELECT NOW()");
-    console.log(result);
-    client.release();
+    console.log("Is user existing?");
+    if (session && session.user && session.user.email) {
+        getUserDetails(session.user.email);
+    } else {
+        console.log("User is null or does not have an email or something is not right.");
+    }
 }
 
 export async function AuthNavBar() {

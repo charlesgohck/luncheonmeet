@@ -9,7 +9,7 @@ const config: PoolConfig = {
     port: parseInt(process.env.DB_PORT || "not available"),
     max: 20,
     idleTimeoutMillis: 30000,
-    connectionTimeoutMillis: 2000,
+    connectionTimeoutMillis: 4000,
     ssl: {
         rejectUnauthorized: true,
         ca: process.env.DB_CA_CERT
@@ -17,3 +17,12 @@ const config: PoolConfig = {
 }
 
 export const dbPool = new Pool(config);
+
+export async function getUserDetails(email: string) {
+    const query: string = "SELECT email, username, about_me, verification FROM dbo.user WHERE email = $1";
+    const client = await dbPool.connect();
+    const parameters: string[] = [email];
+    const result = await client.query(query, parameters);
+    console.log(result.rows);
+    client.release();
+}

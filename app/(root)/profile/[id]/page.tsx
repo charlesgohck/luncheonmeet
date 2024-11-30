@@ -1,7 +1,7 @@
 import { auth } from "@/auth";
 import Image from "next/image";
 
-export default async function Profile({ id }: { id: String }) {
+export default async function Profile({ id }: { id: string }) {
 
     const session = await auth();
     const profileImage = session && session.user && session.user.image ? session.user.image : "https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp";
