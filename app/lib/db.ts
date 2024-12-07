@@ -19,10 +19,20 @@ const config: PoolConfig = {
 export const dbPool = new Pool(config);
 
 export async function getUserDetails(email: string) {
-    const query: string = "SELECT email, username, about_me, verification FROM dbo.user WHERE email = $1";
+    const findOutQuery: string = "SELECT email, username, about_me FROM dbo.user WHERE email = $1";
     const client = await dbPool.connect();
-    const parameters: string[] = [email];
-    const result = await client.query(query, parameters);
-    console.log(result.rows);
+    const parameters = [email];
+    const checkUserResult = await client.query(findOutQuery, parameters);
+    const result = checkUserResult.rows;
     client.release();
+    return result;
+}
+
+export async function insertUserDetails(email: string) {
+    const client = await dbPool.connect();
+    const query: string = "INSERT INTO dbo.user (email, username, about_me) VALUES ($1, $2, $3)";
+    const parameters = [email, "", ""];
+    const result = await client.query(query, parameters);
+    client.release();
+    return result.rows;
 }

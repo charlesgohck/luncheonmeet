@@ -1,21 +1,35 @@
-import { auth, signIn } from "@/auth"
+import { auth, signIn, signOut } from "@/auth"
 import Image from "next/image";
-import { SignOutProfileLinks } from "./SignOut";
 import Link from "next/link";
-import { Session } from "next-auth";
-import { getUserDetails } from '@/app/lib/db';
+import { getUserDetails, insertUserDetails } from '@/app/lib/db';
 
 async function signInAction() {
     "use server"
     await signIn("google");
 }
 
-async function checkOrAddUser(session: Session) {
+async function signOutAction() {
+    "use server"
+    await signOut();
+}
+
+async function checkAndAddUser() {
+    const session = await auth();
     console.log("Is user existing?");
-    if (session && session.user && session.user.email) {
-        getUserDetails(session.user.email);
-    } else {
-        console.log("User is null or does not have an email or something is not right.");
+    try {
+        if (session && session.user && session.user.email) {
+            const matchingUsers = await getUserDetails(session.user.email);
+            if (matchingUsers.length === 0) {
+                const insertResults = await insertUserDetails(session.user.email);
+                console.log("User added");
+            } else {
+                console.log("User exists");
+            }
+        } else {
+            console.log("User is null or does not have an email or something is not right.");
+        }
+    } catch (error) {
+        console.trace(`Error while checking or adding user: ${error}`);
     }
 }
 
@@ -23,7 +37,7 @@ export async function AuthNavBar() {
 
     const session = await auth();
     if (session) {
-        checkOrAddUser(session);
+        checkAndAddUser();
     }
     const profileImage = session && session.user && session.user.image ? session.user.image : "https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp";
 
@@ -81,16 +95,24 @@ export async function AuthNavBar() {
                                     <Image src={profileImage} width={50} height={50} alt={"Profile Picture"} />
                                 </div>
                             </div>
-                            <SignOutProfileLinks />
+                            <div>
+                                <ul
+                                    tabIndex={0}
+                                    className="menu menu-sm dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-52 p-2 shadow">
+                                    <li>
+                                        <Link href={"/profile/123"}>
+                                            Profile
+                                        </Link>
+                                    </li>
+                                    <li>
+                                        <button onClick={signOutAction}>Sign Out</button>
+                                    </li>
+                                </ul>
+                            </div>
                         </div>
                     ) : (
                         <div>
-                            <form
-                                action={signInAction}
-                            >
-                                <button className="btn btn-primary btn-outline" type="submit">Sign In with Google</button>
-                            </form>
-
+                            <button className="btn btn-primary btn-outline" onClick={signInAction}>Sign In with Google</button>
                         </div>
                     )
                 }
