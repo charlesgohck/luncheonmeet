@@ -1,19 +1,11 @@
-import { auth } from "@/auth";
-import Image from "next/image";
-
-export default async function Profile({ id }: { id: string }) {
-
-    const session = await auth();
-    const profileImage = session && session.user && session.user.image ? session.user.image : "https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp";
-    console.log(session);
-
+export default async function ProfileWithId() {
     return (
         <section className="p5">
             <div className="flex justify-center flex-wrap w-full">
-                <h1 className="text-center w-full" >Hello, {session?.user?.name}</h1>
+                {/* <h1 className="text-center w-full" >Hello, {session?.user?.name}</h1> */}
                 <br /><br />
                 <div className="w-full flex justify-center mb-5">
-                    <Image src={profileImage} width={100} height={100} alt={"Profile Picture from federated login"} />
+                    {/* <Image src={profileImage} width={100} height={100} alt={"Profile Picture from federated login"} /> */}
                 </div>
                 <label className="form-control w-1/2">
                     <div className="label">

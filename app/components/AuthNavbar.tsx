@@ -20,10 +20,10 @@ async function checkAndAddUser() {
         if (session && session.user && session.user.email) {
             const matchingUsers = await getUserDetails(session.user.email);
             if (matchingUsers.length === 0) {
-                const insertResults = await insertUserDetails(session.user.email);
-                console.log("User added");
+                const insertResults = await insertUserDetails(session.user.email, session.user.image ? session.user.image : "");
+                console.log(`User added: ${session.user.email}`);
             } else {
-                console.log("User exists");
+                console.log(`User exists: ${session.user.email}`);
             }
         } else {
             console.log("User is null or does not have an email or something is not right.");
@@ -100,7 +100,7 @@ export async function AuthNavBar() {
                                     tabIndex={0}
                                     className="menu menu-sm dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-52 p-2 shadow">
                                     <li>
-                                        <Link href={"/profile/123"}>
+                                        <Link href={"/profile"}>
                                             Profile
                                         </Link>
                                     </li>
