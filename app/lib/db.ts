@@ -20,7 +20,7 @@ const config: PoolConfig = {
 export const dbPool = new Pool(config);
 
 export async function getUserDetails(email: string) {
-    const query: string = "SELECT email, username, about_me, profile_picture, display_name FROM dbo.user WHERE email = $1";
+    const query: string = "SELECT username, about_me, profile_picture, display_name FROM dbo.user WHERE email = $1";
     const client = await dbPool.connect();
     const parameters = [email];
     const checkUserResult = await client.query(query, parameters);
@@ -30,7 +30,7 @@ export async function getUserDetails(email: string) {
 }
 
 export async function getUserDetailsByUsername(username: string) {
-    const query: string = "SELECT email, username, about_me, profile_picture, display_name FROM dbo.user WHERE username = $1";
+    const query: string = "SELECT username, about_me, profile_picture, display_name FROM dbo.user WHERE username = $1";
     const client = await dbPool.connect();
     const parameters = [username];
     const checkUserResult = await client.query(query, parameters);
@@ -45,6 +45,14 @@ export async function insertUserDetails(email: string, profilePicture: string) {
     const username = generateUniqueUsername(email);
     const parameters = [email, username, `Hi! I am ${username}`, profilePicture];
     const result = await client.query(query, parameters);
+    client.release();
+    return result.rows;
+}
+
+export async function editUserDetails(username: string, displayName: string, aboutMe: string) {
+    const client = await dbPool.connect();
+    const query: string = "UPDATE dbo.user SET username = $1, display_name = $2, about_me = $3 WHERE username = $1";
+    const result = await client.query(query, [username, displayName, aboutMe]);
     client.release();
     return result.rows;
 }
