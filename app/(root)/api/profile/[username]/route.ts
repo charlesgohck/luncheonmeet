@@ -1,3 +1,4 @@
+import { VALID_ABOUT_ME_REGEX, VALID_DISPLAY_NAME_REGEX, VALID_USERNAME_REGEX } from "@/app/lib/constants";
 import { getUserDetailsByUsername, editUserDetails } from "@/app/lib/db";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -22,7 +23,18 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{user
     try {
         const originalUserName = (await params).username;
         const payload = await req.json();
-        const { username, displayName, aboutMe } = payload;
+        const { username, displayName, aboutMe }: { username: string, displayName: string, aboutMe: string } = payload;
+        console.log("Input validation checks for user detail updates.");
+        if (username.length > 50 || !VALID_USERNAME_REGEX.test(username)) {
+            console.log(username.length > 30, !VALID_USERNAME_REGEX.test(username));
+            return NextResponse.json({ message: "Error: Username should be 30 characters or less and should not contain special characters or spaces other than -.", payload: null }, { status: 400 });
+        } else if (displayName.length > 30 || !VALID_DISPLAY_NAME_REGEX.test(displayName)) {
+            console.log(displayName.length > 50, !VALID_DISPLAY_NAME_REGEX.test(displayName));
+            return NextResponse.json({ message: "Error: Display name should be 30 characters or less and should not contain special characters other than -.", payload: null }, { status: 400 });
+        } else if (aboutMe.length > 100 || !VALID_ABOUT_ME_REGEX.test(aboutMe)) {
+            console.log(aboutMe.length > 200, !VALID_ABOUT_ME_REGEX.test(aboutMe));
+            return NextResponse.json({ message: "Error: About me should be 100 characters or less and should not contain special characters other than -.", payload: null }, { status: 400 });
+        }
         console.log("Attempting to POST user details");
         console.log(payload);
         const response = await editUserDetails(originalUserName, username, displayName, aboutMe);
