@@ -8,7 +8,6 @@ export interface EditProfileFormInfo {
     username: string,
     displayName: string,
     aboutMe: string,
-    profilePicture: string
 }
 
 export default function EditProfileForm(
@@ -16,7 +15,7 @@ export default function EditProfileForm(
     { username: string, displayName: string, aboutMe: string, profilePicture: string }
 ) {
 
-    const [userDetails, setUserDetails] = useState<EditProfileFormInfo>({ username: username, displayName: displayName, aboutMe: aboutMe, profilePicture: profilePicture });
+    const [userDetails, setUserDetails] = useState<EditProfileFormInfo>({ username: username, displayName: displayName, aboutMe: aboutMe });
     const [loading, setLoading] = useState<boolean>(false);
 
     const handleTextBoxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -28,11 +27,29 @@ export default function EditProfileForm(
     }
 
     const handleTextAreaChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
-        const { name, value } = event.target;
         setUserDetails({
             ...userDetails,
-            [name]: value
+            aboutMe: event.target.value
         })
+    }
+
+    const handleSubmitDetails = async (event: React.FormEvent<HTMLFormElement>) => {
+        event.preventDefault();
+        try {
+            setLoading(true);
+            const response = await axios.post(`/api/profile/${username}`, userDetails);
+            setLoading(false);
+            if (response.status === 200) {
+                console.log("Form submitted successfully!");
+                console.log(response.data);
+            } else {
+                console.log("From not successfully submitted.");
+            }
+        } catch (error) {
+            console.log("Error submitting form: ");
+            console.log(userDetails);
+            setLoading(false);
+        }
     }
 
     if (loading) {
@@ -43,10 +60,10 @@ export default function EditProfileForm(
 
     return (
         <div className="flex justify-center flex-wrap w-full">
-            <label className="form-control w-full max-w-xs">
+            <form className="form-control w-full max-w-xs" onSubmit={handleSubmitDetails}>
                 <div className="w-full flex justify-center mb-5">
                     <Image
-                        src={userDetails["profilePicture"]}
+                        src={profilePicture}
                         width={100}
                         height={100}
                         alt={`Profile Picture for user ${userDetails["username"]} with display name ${userDetails["displayName"]}`}
@@ -66,7 +83,7 @@ export default function EditProfileForm(
                 <textarea className="textarea textarea-bordered" placeholder="About Me" value={userDetails["aboutMe"]} onChange={handleTextAreaChange}></textarea>
                 <br/>
                 <button className="btn btn-primary btn-outline" type="submit">Save</button>
-            </label>
+            </form>
         </div>
     )
 }

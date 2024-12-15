@@ -49,10 +49,11 @@ export async function insertUserDetails(email: string, profilePicture: string) {
     return result.rows;
 }
 
-export async function editUserDetails(username: string, displayName: string, aboutMe: string) {
+export async function editUserDetails(username: string, newUsername: string, displayName: string, aboutMe: string) {
     const client = await dbPool.connect();
-    const query: string = "UPDATE dbo.user SET username = $1, display_name = $2, about_me = $3 WHERE username = $1";
-    const result = await client.query(query, [username, displayName, aboutMe]);
+    const query: string = "UPDATE dbo.user SET username = $1, display_name = $2, about_me = $3 WHERE username = $4";
+    const result = await client.query(query, [newUsername, displayName, aboutMe, username]);
+    console.log(result);
     client.release();
     return result.rows;
 }
