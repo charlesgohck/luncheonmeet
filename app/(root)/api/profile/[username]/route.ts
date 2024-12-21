@@ -1,3 +1,4 @@
+import { UserDetailsWithoutPersonalInformation } from "@/app/(root)/models/api";
 import { VALID_ABOUT_ME_REGEX, VALID_DISPLAY_NAME_REGEX, VALID_USERNAME_REGEX } from "@/app/lib/constants";
 import { getUserDetailsByUsername, editUserDetails } from "@/app/lib/db";
 import { NextRequest, NextResponse } from "next/server";
@@ -5,13 +6,13 @@ import { NextRequest, NextResponse } from "next/server";
 export async function GET(req: NextRequest, { params }: { params: Promise<{ username: string }> }) {
     try {
         const username = (await params).username;
-        var userDetails = null;
         console.log(`Attempting to get user details for username: ${username}`);
         if (username !== null && username !== undefined && username !== "") {
-            userDetails = await getUserDetailsByUsername(username);
-            // console.log(userDetails);
+            const userDetails: UserDetailsWithoutPersonalInformation[] = await getUserDetailsByUsername(username);
+            return NextResponse.json({ message: 'Successfully retrieved user details.', payload: userDetails }, { status: 200 })
+        } else {
+            return NextResponse.json({ message: 'Failed to retrieve user details.', payload: null }, { status: 400 })
         }
-        return NextResponse.json({ message: 'Successfully retrieved ', payload: userDetails }, { status: 200 })
     } catch (error) {
         console.log(`Error calling GET /api/profile/[username]: ${error}`);
         return NextResponse.json({ message: "Failed to get user details. Please try again.", payload: null });
@@ -37,7 +38,7 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{user
         }
         console.log("Attempting to POST user details");
         // console.log(payload);
-        const response = await editUserDetails(originalUserName, username, displayName, aboutMe);
+        await editUserDetails(originalUserName, username, displayName, aboutMe);
         // console.log(response);
         return NextResponse.json({ message: "Success", payload: null }, { status: 200 });
     } catch (error) {

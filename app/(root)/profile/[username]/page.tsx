@@ -1,10 +1,15 @@
 import { getUserDetailsByUsername } from "@/app/lib/db";
 import Image from 'next/image';
+import { UserDetails } from "../../models/api";
 
-export default async function ProfileWithId({ params }: { params: any }) {
+interface PageProps<T> { params: Promise<T>; }
 
-    var username = (await params).username;
-    const userDetails = await getUserDetailsByUsername(username);
+interface ProfileWithIdPageParams { username: string }
+
+export default async function ProfileWithId({ params }: PageProps<ProfileWithIdPageParams>) {
+
+    let username: string = (await params).username;
+    const userDetails: UserDetails[] = await getUserDetailsByUsername(username);
 
     if (userDetails.length !== 1) {
         return <section className="p5">
@@ -14,10 +19,10 @@ export default async function ProfileWithId({ params }: { params: any }) {
         </section>
     } 
     
-    username = userDetails[0]["username"];
-    const aboutMe: string = userDetails[0]["about_me"];
-    const profilePicture: string = userDetails[0]["profile_picture"];
-    const displayName: string = userDetails[0]["display_name"];
+    username = userDetails[0].username;
+    const aboutMe: string = userDetails[0].about_me;
+    const profilePicture: string = userDetails[0].profile_picture;
+    const displayName: string = userDetails[0].display_name;
 
     return (
         <section className="p5">

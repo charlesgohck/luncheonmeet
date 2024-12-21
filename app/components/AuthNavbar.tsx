@@ -20,7 +20,7 @@ async function checkAndAddUser() {
         if (session && session.user && session.user.email) {
             const matchingUsers = await getUserDetails(session.user.email);
             if (matchingUsers.length === 0) {
-                const insertResults = await insertUserDetails(session.user.email, session.user.image ? session.user.image : "");
+                await insertUserDetails(session.user.email, session.user.image ? session.user.image : "");
                 console.log(`User added: ${session.user.email}`);
             } else {
                 console.log(`User exists: ${session.user.email}`);

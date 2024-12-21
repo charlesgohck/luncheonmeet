@@ -5,7 +5,6 @@ import { auth } from "@/auth";
 export default async function Profile() {
 
     const session = await auth();
-    const profileImage = session && session.user && session.user.image ? session.user.image : "https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp";
     const email = session?.user?.email;
 
     if (email === null || email === undefined) {

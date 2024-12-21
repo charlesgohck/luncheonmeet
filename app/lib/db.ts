@@ -1,5 +1,6 @@
 import pg, { PoolConfig } from 'pg';
 import generateUniqueUsername from './name-generator';
+import { UserDetails } from '../(root)/models/api';
 const { Pool } = pg;
 
 const config: PoolConfig = {
@@ -34,7 +35,7 @@ export async function getUserDetailsByUsername(username: string) {
     const client = await dbPool.connect();
     const parameters = [username];
     const checkUserResult = await client.query(query, parameters);
-    const result = checkUserResult.rows;
+    const result: UserDetails[] = checkUserResult.rows;
     client.release();
     return result;
 }

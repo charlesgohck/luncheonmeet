@@ -54,7 +54,7 @@ export default function EditProfileForm(
                 const axiosError = error as AxiosError;
                 if (axiosError.response?.status === 400) {
                     console.log("Form input validation issue.");
-                    const data: Payload = axiosError.response.data as Payload;
+                    const data: Payload<string> = axiosError.response.data as Payload<string>;
                     const message = data.message;
                     setErrorMessage(message);
                     setIsInputError(true);
