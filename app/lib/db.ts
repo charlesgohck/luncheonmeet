@@ -1,6 +1,7 @@
 import pg, { PoolConfig } from 'pg';
 import generateUniqueUsername from './name-generator';
 import { UserDetails } from '../(root)/models/api';
+import fs from 'fs';
 const { Pool } = pg;
 
 const config: PoolConfig = {
@@ -14,7 +15,7 @@ const config: PoolConfig = {
     connectionTimeoutMillis: 4000,
     ssl: {
         rejectUnauthorized: true,
-        ca: process.env.DB_CA_CERT
+        ca: fs.readFileSync("./db_cacert.cer")
     }
 }
 
