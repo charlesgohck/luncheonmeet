@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "echo $DB_CA_CERT > db_cacert.cer && next dev --turbopack",
-    "build": "next build",
+    "build": "echo $DB_CA_CERT > db_cacert.cer && next build",
     "start": "echo $DB_CA_CERT > db_cacert.cer && next start",
     "lint": "next lint"
   },
