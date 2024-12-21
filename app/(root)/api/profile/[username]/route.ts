@@ -25,14 +25,14 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{user
         const payload = await req.json();
         const { username, displayName, aboutMe }: { username: string, displayName: string, aboutMe: string } = payload;
         console.log("Input validation checks for user detail updates.");
-        if (username.length > 50 || !VALID_USERNAME_REGEX.test(username)) {
-            console.log(username.length > 30, !VALID_USERNAME_REGEX.test(username));
+        if (username.length > 30 || !VALID_USERNAME_REGEX.test(username)) {
+            console.log(username.length > 30, !VALID_USERNAME_REGEX.test(username), "Username input validation failed.");
             return NextResponse.json({ message: "Error: Username should be 30 characters or less and should not contain special characters or spaces other than -.", payload: null }, { status: 400 });
         } else if (displayName.length > 30 || !VALID_DISPLAY_NAME_REGEX.test(displayName)) {
-            console.log(displayName.length > 50, !VALID_DISPLAY_NAME_REGEX.test(displayName));
+            console.log(displayName.length > 30, !VALID_DISPLAY_NAME_REGEX.test(displayName), "Display name input validation failed.");
             return NextResponse.json({ message: "Error: Display name should be 30 characters or less and should not contain special characters other than -.", payload: null }, { status: 400 });
-        } else if (aboutMe.length > 100 || !VALID_ABOUT_ME_REGEX.test(aboutMe)) {
-            console.log(aboutMe.length > 200, !VALID_ABOUT_ME_REGEX.test(aboutMe));
+        } else if (aboutMe.length > 200 || !VALID_ABOUT_ME_REGEX.test(aboutMe)) {
+            console.log(aboutMe.length > 200, !VALID_ABOUT_ME_REGEX.test(aboutMe), "About Me input validation failed.");
             return NextResponse.json({ message: "Error: About me should be 100 characters or less and should not contain special characters other than -.", payload: null }, { status: 400 });
         }
         console.log("Attempting to POST user details");
