@@ -36,9 +36,9 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{user
             return NextResponse.json({ message: "Error: About me should be 100 characters or less and should not contain special characters other than -.", payload: null }, { status: 400 });
         }
         console.log("Attempting to POST user details");
-        console.log(payload);
+        // console.log(payload);
         const response = await editUserDetails(originalUserName, username, displayName, aboutMe);
-        console.log(response);
+        // console.log(response);
         return NextResponse.json({ message: "Success", payload: null }, { status: 200 });
     } catch (error) {
         const err: string = `Error calling POST /api/profile/[username]`;
