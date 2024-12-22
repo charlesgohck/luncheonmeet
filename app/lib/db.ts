@@ -2,6 +2,7 @@ import pg, { PoolConfig } from 'pg';
 import generateUniqueUsername from './name-generator';
 import { UserDetails } from '../(root)/models/api';
 import fs from 'fs';
+import { EditPostFormObject } from '../components/EditPostForm';
 const { Pool } = pg;
 
 const config: PoolConfig = {
@@ -58,4 +59,32 @@ export async function editUserDetails(username: string, newUsername: string, dis
     console.log(result);
     client.release();
     return result.rows;
+}
+
+export async function getPostsByEmail(email: string, startTimeFilter: Date, endTimeFilter: Date) {
+
+}
+
+export async function getPostsByUsername(username: string, startTimeFilter: Date, endTimeFilter: Date) {
+
+}
+
+export async function getPosts(startTimeFilter: Date, endTimeFilter: Date) {
+
+}
+
+export async function getPost(id: string) {
+
+}
+
+export async function createNewPost(post: EditPostFormObject) {
+
+}
+
+export async function updatePost(post: EditPostFormObject) {
+
+}
+
+export async function deletePost(id: string) {
+    
 }
