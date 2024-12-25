@@ -4,21 +4,21 @@ import axios, { AxiosError } from "axios";
 import { useState } from "react";
 import { Payload } from "../(root)/models/api";
 
-export interface EditPostFormObject {
+export interface PostInfo {
     id: string,
     title: string,
     description: string,
-    startTime: Date,
-    endTime: Date,
+    start_time: Date,
+    end_time: Date,
     location: string,
-    lastUpdatedAt: Date,
-    lastUpdatedBy: string,
-    userEmail: string
+    last_updated_at: Date,
+    last_updated_by: string,
+    createdBy: string
 }
 
-export default function EditPostForm({ editPostForm }: { editPostForm: EditPostFormObject }) {
+export default function EditPostForm({ editPostForm }: { editPostForm: PostInfo }) {
 
-    const [editPostFormDetails, setEditPostFormDetails] = useState<EditPostFormObject>(editPostForm);
+    const [editPostFormDetails, setEditPostFormDetails] = useState<PostInfo>(editPostForm);
     const [loading, setLoading] = useState<boolean>(false);
     const [errorMessage, setErrorMessage] = useState<string>("");
     const [isInputError, setIsInputError] = useState<boolean>(false);
@@ -121,11 +121,11 @@ export default function EditPostForm({ editPostForm }: { editPostForm: EditPostF
                 <div className="label">
                     <span className="label-text">Start Date/Time</span>
                 </div>
-                <input aria-label="Start Date and Time" type="datetime-local" className="input input-bordered w-full max-w-xs" name="startTime"/>
+                <input aria-label="Start Date and Time" type="datetime-local" className="input input-bordered w-full max-w-xs" name="startTime" />
                 <div className="label">
                     <span className="label-text">End Date/Time</span>
                 </div>
-                <input aria-label="Start Date and Time" type="datetime-local" className="input input-bordered w-full max-w-xs" name="endTime"/>
+                <input aria-label="Start Date and Time" type="datetime-local" className="input input-bordered w-full max-w-xs" name="endTime" />
                 <br />
                 <button className="btn btn-primary btn-outline" type="submit">Create Post</button>
             </form>

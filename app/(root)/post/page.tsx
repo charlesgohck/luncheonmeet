@@ -1,22 +1,28 @@
-import EditPostForm, { EditPostFormObject } from "@/app/components/EditPostForm";
+import { PostInfo } from "@/app/components/EditPostForm"
+import { getPostsShort, MAX_DATE } from "@/app/lib/db"
 
-export default async function Post() {
+export default async function PostListing() {
 
-    const newPost: EditPostFormObject = {
-        userEmail: "",
-        id: "",
-        title: "",
-        description: "",
-        startTime: new Date(),
-        endTime: new Date(),
-        location: "",
-        lastUpdatedAt: new Date(),
-        lastUpdatedBy: ""
-    };
+    const postInfo: PostInfo[] = await getPostsShort(new Date(), MAX_DATE, 0);
+    // console.log(postInfo);
 
-    return (
-        <section className="p5">
-            <EditPostForm editPostForm={newPost}  />
-        </section>
-    )
+    return <section>
+        <div className="flex flex-wrap justify-evenly">
+            {
+                postInfo.map(element => {
+                    return <div className="card bg-base-100 w-96 shadow-xl m-5" key={element.title.replaceAll(" ", "-")}>
+                    <div className="card-body">
+                      <h2 className="card-title">{element.title}</h2>
+                      <p className="prose-md">{element.description}</p>
+                      <p className="prose-sm">{element.start_time.toLocaleDateString()} {element.start_time.toLocaleTimeString()} to {element.start_time.toLocaleDateString()} {element.end_time.toLocaleTimeString()}</p>
+                      <div className="card-actions justify-end">
+                        <button className="btn btn-primary">Read More</button>
+                      </div>
+                    </div>
+                  </div>
+                })
+            }
+        </div>
+    </section>
+
 }
