@@ -5,6 +5,8 @@ import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(req: NextRequest, { params }: { params: Promise<{ username: string }> }) {
     try {
+        const url: string = req.url;
+        console.log(`Calling ${url}`);
         const username = (await params).username;
         console.log(`Attempting to get user details for username: ${username}`);
         if (username !== null && username !== undefined && username !== "") {

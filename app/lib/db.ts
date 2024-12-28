@@ -59,3 +59,46 @@ export async function editUserDetails(username: string, newUsername: string, dis
     client.release();
     return result.rows;
 }
+
+export const MAX_DATE = new Date(9999, 11, 31);
+
+// export async function getAllPostsByEmail(email: string, startTimeFilter: Date, endTimeFilter: Date, offset: number) {
+
+// }
+
+// export async function getPostsByUsername(username: string, startTimeFilter: Date, endTimeFilter: Date, offset: number) {
+
+// }
+
+export async function getPostsShort(startTimeFilter: Date, endTimeFilter: Date, offset: number) {
+    const client = await dbPool.connect();
+    const query: string = "SELECT id, title, description, start_time, end_time, location, last_updated_at, last_updated_by, created_by FROM dbo.meetup WHERE start_time BETWEEN $1 AND $2 ORDER BY start_time DESC OFFSET $3";
+    const result = await client.query(query, [startTimeFilter.toISOString(), endTimeFilter.toISOString(), offset]);
+    // console.log(result);
+    client.release();
+    return result.rows
+}
+
+export async function getPostFull(id: string) {
+    const client = await dbPool.connect();
+    const query: string = "SELECT id, title, description, start_time, end_time, location, last_updated_at, last_updated_by, created_by FROM dbo.meetup WHERE id = $1";
+    const result = await client.query(query, [id]);
+    console.log(result);
+    client.release();
+    if (result.rows.length === 0) {
+        return null;
+    }
+    return result.rows[0]
+}
+
+// export async function createNewPost(post: PostInfo) {
+    
+// }
+
+// export async function updatePost(post: PostInfo) {
+
+// }
+
+// export async function deletePost(id: string) {
+    
+// }
