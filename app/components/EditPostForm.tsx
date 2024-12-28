@@ -13,7 +13,7 @@ export interface PostInfo {
     location: string,
     last_updated_at: Date,
     last_updated_by: string,
-    createdBy: string
+    created_by: string
 }
 
 export default function EditPostForm({ editPostForm }: { editPostForm: PostInfo }) {
