@@ -16,7 +16,7 @@ export default async function PostListing() {
                       <p className="prose-md">{element.description}</p>
                       <p className="prose-sm">{element.start_time.toLocaleDateString()} {element.start_time.toLocaleTimeString()} to {element.start_time.toLocaleDateString()} {element.end_time.toLocaleTimeString()}</p>
                       <div className="card-actions justify-end">
-                        <button className="btn btn-primary">Read More</button>
+                        <button className="btn btn-primary">More</button>
                       </div>
                     </div>
                   </div>

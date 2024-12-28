@@ -5,6 +5,8 @@ import { UserDetails } from "../../models/api";
 
 export async function GET(req: NextRequest) {
     try {
+        const url: string = req.url;
+        console.log(`Calling ${url}`);
         const session = await auth();
         const email = session?.user?.email;
         console.log(`Attempting to get user details for email: ${email}`);

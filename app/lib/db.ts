@@ -2,7 +2,6 @@ import pg, { PoolConfig } from 'pg';
 import generateUniqueUsername from './name-generator';
 import { UserDetails } from '../(root)/models/api';
 import fs from 'fs';
-import { PostInfo } from '../components/EditPostForm';
 const { Pool } = pg;
 
 const config: PoolConfig = {
@@ -63,13 +62,13 @@ export async function editUserDetails(username: string, newUsername: string, dis
 
 export const MAX_DATE = new Date(9999, 11, 31);
 
-export async function getAllPostsByEmail(email: string, startTimeFilter: Date, endTimeFilter: Date, offset: number) {
+// export async function getAllPostsByEmail(email: string, startTimeFilter: Date, endTimeFilter: Date, offset: number) {
 
-}
+// }
 
-export async function getPostsByUsername(username: string, startTimeFilter: Date, endTimeFilter: Date, offset: number) {
+// export async function getPostsByUsername(username: string, startTimeFilter: Date, endTimeFilter: Date, offset: number) {
 
-}
+// }
 
 export async function getPostsShort(startTimeFilter: Date, endTimeFilter: Date, offset: number) {
     const client = await dbPool.connect();
@@ -92,14 +91,14 @@ export async function getPostFull(id: string) {
     return result.rows[0]
 }
 
-export async function createNewPost(post: PostInfo) {
+// export async function createNewPost(post: PostInfo) {
     
-}
+// }
 
-export async function updatePost(post: PostInfo) {
+// export async function updatePost(post: PostInfo) {
 
-}
+// }
 
-export async function deletePost(id: string) {
+// export async function deletePost(id: string) {
     
-}
+// }
