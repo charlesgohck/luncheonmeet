@@ -10,12 +10,12 @@ export default async function PostListing() {
         <div className="flex flex-wrap justify-evenly">
             {
                 postInfo.map(element => {
-                    return <div className="card bg-base-100 w-[80%] shadow-xl m-5" key={element.title.replaceAll(" ", "-")}>
+                  return <div className="card bg-base-100 w-[80%] shadow-xl m-5" key={element.title.replaceAll(" ", "-")}>
                     <div className="card-body">
                       <h2 className="card-title">{element.title}</h2>
                       <p className="prose-lg">{element.location}</p>
                       <p className="prose-md">{element.description}</p>
-                      <p className="prose-sm">{element.start_time.toLocaleDateString()} {element.start_time.toLocaleTimeString()} to {element.start_time.toLocaleDateString()} {element.end_time.toLocaleTimeString()}</p>
+                      <p className="prose-sm">{element.start_time.toUTCString()} to {element.end_time.toUTCString()}</p>
                       <div className="card-actions justify-end">
                         <button className="btn btn-primary">More</button>
                       </div>
