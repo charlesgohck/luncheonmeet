@@ -13,17 +13,34 @@ export default async function PostWithId({ params }: PageProps<PostWithIdPagePar
     const postInfo: PostInfo = await getPostFull(id);
 
     if (postInfo === null || postInfo === undefined) {
-        return <div className="prose-2xl text-center">
-            Meet not found.
-        </div>
+        return (
+            <div className="text-center">
+                <div className="prose-2xl">
+                    Meet not found.
+                </div>
+                <div className="flex w-full flex-col">
+                    <div className="divider"></div>
+                </div>
+                <Link href={"/post"}><button className="btn btn-primary">Back</button></Link>
+            </div>
+
+        )
     }
 
     const creatorDetails: UserDetails[] = await getUserDetails(postInfo.created_by);
 
     if (creatorDetails === null || creatorDetails === undefined || creatorDetails.length === 0) {
-        return <div className="prose-2xl text-center">
-            Meet creator not found.
-        </div>
+        return (
+            <div className="text-center">
+                <div className="prose-2xl text-center">
+                    Meet creator not found.
+                </div>
+                <div className="flex w-full flex-col">
+                    <div className="divider"></div>
+                </div>
+                <Link href={"/post"}><button className="btn btn-primary">Back</button></Link>
+            </div>
+        )
     }
 
     const creator: UserDetails = creatorDetails[0];
