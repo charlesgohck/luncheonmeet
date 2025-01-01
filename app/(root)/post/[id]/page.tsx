@@ -9,7 +9,7 @@ interface PostWithIdPageParams { id: string }
 
 export default async function PostWithId({ params }: PageProps<PostWithIdPageParams>) {
 
-    let id: string = (await params).id;
+    const id: string = (await params).id;
     const postInfo: PostInfo = await getPostFull(id);
 
     if (postInfo === null || postInfo === undefined) {
