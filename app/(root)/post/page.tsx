@@ -1,5 +1,6 @@
 import { PostInfo } from "@/app/components/EditPostForm"
 import { getPostsShort, MAX_DATE } from "@/app/lib/db"
+import Link from "next/link";
 
 export default async function PostListing() {
 
@@ -17,7 +18,7 @@ export default async function PostListing() {
                       <p className="prose-md">{element.description}</p>
                       <p className="prose-sm">{element.start_time.toUTCString()} to {element.end_time.toUTCString()}</p>
                       <div className="card-actions justify-end">
-                        <button className="btn btn-primary">More</button>
+                        <Link href={`/post/${element.id}`}><button className="btn btn-primary">More</button></Link>
                       </div>
                     </div>
                   </div>
