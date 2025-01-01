@@ -23,6 +23,17 @@ export default function EditPostForm({ editPostForm }: { editPostForm: PostInfo 
     const [errorMessage, setErrorMessage] = useState<string>("");
     const [isInputError, setIsInputError] = useState<boolean>(false);
 
+    const [startTimeString, setStartTimeString] = useState(editPostForm.start_time.toISOString().slice(0, 16));
+    const [endTimeString, setEndTimeString] = useState(editPostForm.end_time.toISOString().slice(0, 16));
+
+    const handleStartTimeStringChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setStartTimeString(event.target.value);
+    }
+
+    const handleEndTimeStringChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setEndTimeString(event.target.value);
+    }
+
     const handleTextBoxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = event.target;
         setEditPostFormDetails({
@@ -43,9 +54,12 @@ export default function EditPostForm({ editPostForm }: { editPostForm: PostInfo 
         event.preventDefault();
         try {
             setLoading(true);
-            const response = await axios.post(`/api/post`, editPostFormDetails);
+            const finalFormDetails: PostInfo = editPostFormDetails;
+            finalFormDetails.start_time = new Date(startTimeString);
+            finalFormDetails.end_time = new Date(endTimeString);
+            const response = await axios.post(`/api/post`, finalFormDetails);
             setLoading(false);
-            if (response.status === 200) {
+            if (response.status === 201) {
                 console.log("Post form submitted successfully!");
                 console.log(response.data);
             } else {
@@ -57,20 +71,22 @@ export default function EditPostForm({ editPostForm }: { editPostForm: PostInfo 
                 const axiosError = error as AxiosError;
                 if (axiosError.response?.status === 400) {
                     console.log("Form input validation issue.");
-                    const data: Payload<string> = axiosError.response.data as Payload<string>;
-                    const message = data.message;
-                    setErrorMessage(message);
-                    setIsInputError(true);
-                    setTimeout(() => {
-                        setIsInputError(false)
-                    }, 4000);
+                } else if (axiosError.response?.status === 501 || axiosError.response!.status === 500) {
+                    console.log("Internal error sending POST form");
+                } else {
+                    console.log("Unknown error occured with status code " + axiosError.response?.status);
                 }
+                const data: Payload<string> = axiosError.response?.data as Payload<string>;
+                const message = data.message;
+                setErrorMessage(message);
+                setIsInputError(true);
+                setTimeout(() => {
+                    setIsInputError(false)
+                }, 4000);
             }
             setLoading(false);
         }
     }
-
-    console.log(editPostForm);
 
     if (loading) {
         return <div className="flex justify-center flex-wrap w-full">
@@ -117,17 +133,17 @@ export default function EditPostForm({ editPostForm }: { editPostForm: PostInfo 
                 <div className="label">
                     <span className="label-text">Location</span>
                 </div>
-                <input type="text" placeholder="Enter a title for your activity." className="input input-bordered w-full max-w-xs" name="location" maxLength={30} value={editPostFormDetails.location} onChange={handleTextBoxChange} />
+                <input type="text" placeholder="Enter a location for your activity." className="input input-bordered w-full max-w-xs" name="location" maxLength={30} value={editPostFormDetails.location} onChange={handleTextBoxChange} />
                 <div className="label">
-                    <span className="label-text">Start Date/Time</span>
+                    <span className="label-text">Start Date/Time GMT</span>
                 </div>
-                <input aria-label="Start Date and Time" type="datetime-local" className="input input-bordered w-full max-w-xs" name="startTime" />
+                <input aria-label="Start Date and Time" type="datetime-local" className="input input-bordered w-full max-w-xs" name="startTime" value={startTimeString} onChange={handleStartTimeStringChange} />
                 <div className="label">
-                    <span className="label-text">End Date/Time</span>
+                    <span className="label-text">End Date/Time GMT</span>
                 </div>
-                <input aria-label="Start Date and Time" type="datetime-local" className="input input-bordered w-full max-w-xs" name="endTime" />
+                <input aria-label="Start Date and Time" type="datetime-local" className="input input-bordered w-full max-w-xs" name="endTime" value={endTimeString} onChange={handleEndTimeStringChange} />
                 <br />
-                <button className="btn btn-primary btn-outline" type="submit">Create Post</button>
+                <button className="btn btn-primary btn-outline" type="submit">Create Meet</button>
             </form>
         </div>
     )

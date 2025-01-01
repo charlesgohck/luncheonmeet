@@ -3,12 +3,12 @@ import Image from "next/image";
 import Link from "next/link";
 import { getUserDetails, insertUserDetails } from '@/app/lib/db';
 
-async function signInAction() {
+export async function signInAction() {
     "use server"
     await signIn("google");
 }
 
-async function signOutAction() {
+export async function signOutAction() {
     "use server"
     await signOut();
 }

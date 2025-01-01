@@ -1,6 +1,14 @@
 import EditPostForm, { PostInfo } from "@/app/components/EditPostForm";
+import SignInRequest from "@/app/components/SignInRequest";
+import { auth } from "@/auth";
 
 export default async function Post() {
+
+    const session = await auth();
+    const email = session?.user?.email;
+    if (email === null || email === undefined) {
+        return <SignInRequest />
+    }
 
     const newPost: PostInfo = {
         id: "",
@@ -16,7 +24,7 @@ export default async function Post() {
 
     return (
         <section className="p5">
-            Under Development
+            <div className="prose-2xl text-center">New Meet</div>
             <EditPostForm editPostForm={newPost}  />
         </section>
     )
