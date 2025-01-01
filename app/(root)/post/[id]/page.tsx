@@ -57,7 +57,7 @@ export default async function PostWithId({ params }: PageProps<PostWithIdPagePar
             <div className="flex w-full flex-col">
                 <div className="divider"></div>
             </div>
-            <div className="prose-2xl">Meet Group Room</div>
+            <div className="prose-2xl">Meeting Room</div>
             <div className="prose-sm text-gray-400">Work in progress</div>
             <div className="flex w-full flex-col">
                 <div className="divider"></div>
