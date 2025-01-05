@@ -57,7 +57,7 @@ export async function editUserDetails(username: string, newUsername: string, dis
     const client = await dbPool.connect();
     const query: string = "UPDATE dbo.user SET username = $1, display_name = $2, about_me = $3 WHERE username = $4";
     const result = await client.query(query, [newUsername, displayName, aboutMe, username]);
-    console.log(result);
+    // console.log(result);
     client.release();
     return result.rows;
 }
@@ -99,8 +99,8 @@ export async function getPostFull(id: string) {
 export async function createNewPost(post: PostInfo) {
     try {
         const client = await dbPool.connect();
-        const query: string = "INSERT INTO dbo.meetup (title, description, start_time, end_time, location, last_updated_at, last_updated_by, created_by) VALUES ($1, $2, $3, $4, $5, NOW(), $6, $7)";
-        await client.query(query, [post.title, post.description, post.start_time, post.end_time, post.location, post.last_updated_by, post.created_by]);
+        const query: string = "INSERT INTO dbo.meetup (title, description, start_time, end_time, location, last_updated_at, last_updated_by, created_by) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)";
+        await client.query(query, [post.title, post.description, post.start_time, post.end_time, post.location, post.last_updated_at, post.last_updated_by, post.created_by]);
         client.release();
         return "Success: Created new post.";
     } catch (error) {

@@ -3,6 +3,8 @@
 import axios, { AxiosError } from "axios";
 import { useState } from "react";
 import { Payload } from "../(root)/models/api";
+import { useRouter } from "next/navigation";
+import { setAlertClasses } from "../lib/utils";
 
 export interface PostInfo {
     id: string,
@@ -18,11 +20,11 @@ export interface PostInfo {
 
 export default function EditPostForm({ editPostForm }: { editPostForm: PostInfo }) {
 
+    const router = useRouter();
+
     const [editPostFormDetails, setEditPostFormDetails] = useState<PostInfo>(editPostForm);
     const [loading, setLoading] = useState<boolean>(false);
-    const [errorMessage, setErrorMessage] = useState<string>("");
-    const [isInputError, setIsInputError] = useState<boolean>(false);
-
+    const [alertMessage, setAlertMessage] = useState<string>("");
     const [startTimeString, setStartTimeString] = useState(editPostForm.start_time.toISOString().slice(0, 16));
     const [endTimeString, setEndTimeString] = useState(editPostForm.end_time.toISOString().slice(0, 16));
 
@@ -58,11 +60,18 @@ export default function EditPostForm({ editPostForm }: { editPostForm: PostInfo 
             finalFormDetails.start_time = new Date(startTimeString);
             finalFormDetails.end_time = new Date(endTimeString);
             const response = await axios.post(`/api/post`, finalFormDetails);
-            setLoading(false);
+            console.log("Checkpoint 1");
+            console.log(response);
             if (response.status === 201) {
                 console.log("Post form submitted successfully!");
                 console.log(response.data);
+                setAlertMessage("Success: Created new Meet!");
+                console.log(`Routing to /post/${finalFormDetails.id}`);
+                // setTimeout(() => {
+                //     router.push(`/post/${finalFormDetails.id}`);
+                // }, 250);
             } else {
+                setAlertMessage("Warning: Something went wrong when submitting. Please try again.")
                 console.log("Post form not successfully submitted.");
             }
         } catch (error) {
@@ -78,14 +87,13 @@ export default function EditPostForm({ editPostForm }: { editPostForm: PostInfo 
                 }
                 const data: Payload<string> = axiosError.response?.data as Payload<string>;
                 const message = data.message;
-                setErrorMessage(message);
-                setIsInputError(true);
+                setAlertMessage(message);
                 setTimeout(() => {
-                    setIsInputError(false)
+                    setAlertMessage("")
                 }, 4000);
             }
-            setLoading(false);
         }
+        setLoading(false);
     }
 
     if (loading) {
@@ -106,7 +114,7 @@ export default function EditPostForm({ editPostForm }: { editPostForm: PostInfo 
     return (
         <div className="flex justify-center flex-wrap w-full">
             {
-                isInputError ? <div role="alert" className="alert alert-error">
+                alertMessage && alertMessage.length > 0 ? <div role="alert" className={setAlertClasses(alertMessage)}>
                     <svg
                         xmlns="http://www.w3.org/2000/svg"
                         className="h-6 w-6 shrink-0 stroke-current"
@@ -118,7 +126,7 @@ export default function EditPostForm({ editPostForm }: { editPostForm: PostInfo 
                             strokeWidth="2"
                             d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
                     </svg>
-                    <span>{errorMessage}</span>
+                    <span>{alertMessage}</span>
                 </div> : <></>
             }
             <form className="form-control w-full max-w-xs" onSubmit={handleSubmitPostForm}>
@@ -135,11 +143,11 @@ export default function EditPostForm({ editPostForm }: { editPostForm: PostInfo 
                 </div>
                 <input type="text" placeholder="Enter a location for your activity." className="input input-bordered w-full max-w-xs" name="location" maxLength={30} value={editPostFormDetails.location} onChange={handleTextBoxChange} />
                 <div className="label">
-                    <span className="label-text">Start Date/Time GMT</span>
+                    <span className="label-text">Start Date/Time Local Date Time</span>
                 </div>
                 <input aria-label="Start Date and Time" type="datetime-local" className="input input-bordered w-full max-w-xs" name="startTime" value={startTimeString} onChange={handleStartTimeStringChange} />
                 <div className="label">
-                    <span className="label-text">End Date/Time GMT</span>
+                    <span className="label-text">End Date/Time Local Date Time</span>
                 </div>
                 <input aria-label="Start Date and Time" type="datetime-local" className="input input-bordered w-full max-w-xs" name="endTime" value={endTimeString} onChange={handleEndTimeStringChange} />
                 <br />

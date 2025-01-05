@@ -18,8 +18,8 @@ export default async function Post() {
         end_time: new Date(),
         location: "",
         last_updated_at: new Date(),
-        last_updated_by: "",
-        created_by: ""
+        last_updated_by: email,
+        created_by: email
     };
 
     return (

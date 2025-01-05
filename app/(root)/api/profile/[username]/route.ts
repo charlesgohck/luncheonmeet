@@ -1,32 +1,28 @@
-import { UserDetailsWithoutPersonalInformation } from "@/app/(root)/models/api";
+import { UserDetails } from "@/app/(root)/models/api";
 import { VALID_ABOUT_ME_REGEX, VALID_DISPLAY_NAME_REGEX, VALID_USERNAME_REGEX } from "@/app/lib/constants";
-import { getUserDetailsByUsername, editUserDetails } from "@/app/lib/db";
+import { getUserDetailsByUsername, editUserDetails, getUserDetails } from "@/app/lib/db";
+import { auth } from "@/auth";
 import { NextRequest, NextResponse } from "next/server";
-
-export async function GET(req: NextRequest, { params }: { params: Promise<{ username: string }> }) {
-    try {
-        const url: string = req.url;
-        console.log(`Calling ${url}`);
-        const username = (await params).username;
-        console.log(`Attempting to get user details for username: ${username}`);
-        if (username !== null && username !== undefined && username !== "") {
-            const userDetails: UserDetailsWithoutPersonalInformation[] = await getUserDetailsByUsername(username);
-            return NextResponse.json({ message: 'Successfully retrieved user details.', payload: userDetails }, { status: 200 })
-        } else {
-            return NextResponse.json({ message: 'Failed to retrieve user details.', payload: null }, { status: 400 })
-        }
-    } catch (error) {
-        console.log(`Error calling GET /api/profile/[username]: ${error}`);
-        return NextResponse.json({ message: "Failed to get user details. Please try again.", payload: null });
-    }
-}
 
 // https://blog.logrocket.com/using-cors-next-js-handle-cross-origin-requests/
 export async function POST(req: NextRequest, { params }: { params: Promise<{username: string}> }) {
     try {
+        const session = await auth();
+        const email = session?.user?.email;
+        if (email === null || email === undefined) {
+            console.log("Not logged in. POST /api/post aborted.");
+            return NextResponse.json({ message: "Not logged in. POST /api/post aborted.", payload: false }, { status: 401 });
+        }
         const originalUserName = (await params).username;
         const payload = await req.json();
+        console.log(payload);
         const { username, displayName, aboutMe }: { username: string, displayName: string, aboutMe: string } = payload;
+        console.log("Checking if user is authorized.")
+        const userDetails: UserDetails[] = await getUserDetailsByUsername(username);
+        if (userDetails.length === 0 || userDetails[0].username !== username) {
+            console.log("User is not authorized to access this endpoint");
+            return NextResponse.json({ message: "User not authorized. POST /api/post aborted.", payload: false }, { status: 403 });
+        }
         console.log("Input validation checks for user detail updates.");
         if (username.length > 30 || !VALID_USERNAME_REGEX.test(username)) {
             console.log(username.length > 30, !VALID_USERNAME_REGEX.test(username), "Username input validation failed.");
