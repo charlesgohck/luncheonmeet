@@ -1,21 +1,48 @@
+import { PostInfo } from "@/app/components/EditPostForm";
+import { isBefore, VALID_DESCRIPTION, VALID_TITLE } from "@/app/lib/constants";
+import { createNewPost } from "@/app/lib/db";
+import { auth } from "@/auth";
+import { randomUUID } from "crypto";
 import { NextRequest, NextResponse } from "next/server";
 
-export async function GET(req: NextRequest) {
+export async function POST(req: NextRequest) {
     try {
         const url: string = req.url;
         console.log(`Calling ${url}`);
-        // const session = await auth();
-        // const email = session?.user?.email;
-        // console.log(`Attempting to get user details for email: ${email}`);
-        // if (email !== null && email !== undefined && email !== "") {
-        //     const userDetails: UserDetails[] = await getUserDetails(email);
-        //     return NextResponse.json({ message: 'Successfully retrieved user details.', payload: userDetails }, { status: 200 })
-        // } else {
-        //     return NextResponse.json({ message: 'Failed to retrieve user details.', payload: null }, { status: 400 })
-        // }
-        return NextResponse.json({ message: 'Not implemented error.', payload: null }, { status: 501 });
+        const session = await auth();
+        const email = session?.user?.email;
+        if (email === null || email === undefined) {
+            console.log("Not logged in. POST /api/post aborted.");
+            return NextResponse.json({ message: "Not logged in. POST /api/post aborted.", payload: false }, { status: 401 });
+        }
+        console.log(`Attempting to perform POST /api/post for email: ${email}`);
+        const body: PostInfo = await req.json();
+        console.log(body);
+        if (body.id === null || body.id === undefined || body.id === "") {
+            console.log("Provisioning new UUID for new post.")
+            body.id = randomUUID();
+        }
+        if (body.title === "" || !VALID_TITLE.test(body.title)) {
+            return NextResponse.json({ message: "Error: Title must be between 1 and 30 characters and contain only alphanumeric characters, spaces, and punctuation.", payload: false } , { status: 400 })
+        }
+        if (body.description === "" || !VALID_DESCRIPTION.test(body.description)) {
+            return NextResponse.json({ message: "Error: Description must be between 1 and 300 characters and contain only alphanumeric characters, spaces, and punctuation.", payload: false } , { status: 400 })
+        }
+        if (body.location === "" || !VALID_TITLE.test(body.location)) {
+            return NextResponse.json({ message: "Error: Location must be between 1 and 30 characters and contain only alphanumeric characters, spaces, and punctuation.", payload: false } , { status: 400 })
+        }
+        if (!isBefore(body.start_time, body.end_time)) {
+            return NextResponse.json({ message: "Error: Start time should be before end time.", payload: true }, { status: 400 })
+        }
+        const result: string = await createNewPost(body);
+        console.log(result);
+        if (result.startsWith("Success")) {
+            return NextResponse.json({ message: result, payload: true }, { status: 201 });
+        } else {
+            return NextResponse.json({ message: result, payload: false }, { status: 500 });
+        }
     } catch (error) {
-        console.log(`Error calling GET /api/post: ${error}`);
-        return NextResponse.json({ message: "Failed to get user details for current user. Please try again.", payload: null });
+        console.log(`Error calling POST /api/post: ${error}`);
+        return NextResponse.json({ message: "Failed to call POST for /api/post. Please try again.", payload: null });
     }
 }

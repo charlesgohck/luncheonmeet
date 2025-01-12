@@ -1,0 +1,27 @@
+# Test POST Create new Meet post
+POST http://localhost:3000/api/post HTTP/1.1
+Content-Type: application/json
+
+{
+    "id": "",
+    "title": "Test Title",
+    "description": "Test description",
+    "start_time": "2025-01-01T01:54:00.000Z",
+    "end_time": "2025-01-01T01:54:00.000Z",
+    "location": "Test location",
+    "last_updated_at": "2025-01-01T09:54:29.872Z",
+    "last_updated_by": "test@gmail.com",
+    "created_by": "test@gmail.com"
+}
+
+###
+
+# Update Profile
+POST http://localhost:3000/api/profile/valid-chocolate-earthworm
+Content-Type: application/json
+
+{
+  "username": "valid-chocolate-earthworm",
+  "displayName": "Luncheon Meet Test Account",
+  "aboutMe": "Hi! I am valid-chocolate-earthworm and this is about me."
+}
