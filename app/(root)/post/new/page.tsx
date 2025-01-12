@@ -1,6 +1,7 @@
 import EditPostForm, { PostInfo } from "@/app/components/EditPostForm";
 import SignInRequest from "@/app/components/SignInRequest";
 import { auth } from "@/auth";
+import { randomUUID } from "crypto";
 
 export default async function Post() {
 
@@ -11,7 +12,7 @@ export default async function Post() {
     }
 
     const newPost: PostInfo = {
-        id: "",
+        id: randomUUID(),
         title: "",
         description: "",
         start_time: new Date(),

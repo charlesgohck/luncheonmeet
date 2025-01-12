@@ -99,13 +99,13 @@ export async function getPostFull(id: string) {
 export async function createNewPost(post: PostInfo) {
     try {
         const client = await dbPool.connect();
-        const query: string = "INSERT INTO dbo.meetup (title, description, start_time, end_time, location, last_updated_at, last_updated_by, created_by) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)";
-        await client.query(query, [post.title, post.description, post.start_time, post.end_time, post.location, post.last_updated_at, post.last_updated_by, post.created_by]);
+        const query: string = "INSERT INTO dbo.meetup (id, title, description, start_time, end_time, location, last_updated_at, last_updated_by, created_by) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)";
+        await client.query(query, [post.id, post.title, post.description, post.start_time, post.end_time, post.location, post.last_updated_at, post.last_updated_by, post.created_by]);
         client.release();
         return "Success: Created new post.";
     } catch (error) {
         console.log(`Error in DB utils createNewPost: ${error}`);
-        return "Error: Unable to create new post in db utils.";
+        return "Error: Internal server error. Unable to add new post.";
     }
 }
 

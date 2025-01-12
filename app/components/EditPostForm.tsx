@@ -60,16 +60,15 @@ export default function EditPostForm({ editPostForm }: { editPostForm: PostInfo 
             finalFormDetails.start_time = new Date(startTimeString);
             finalFormDetails.end_time = new Date(endTimeString);
             const response = await axios.post(`/api/post`, finalFormDetails);
-            console.log("Checkpoint 1");
-            console.log(response);
+            // console.log(finalFormDetails);
             if (response.status === 201) {
-                console.log("Post form submitted successfully!");
-                console.log(response.data);
+                // console.log("Post form submitted successfully!");
+                // console.log(response.data);
                 setAlertMessage("Success: Created new Meet!");
-                console.log(`Routing to /post/${finalFormDetails.id}`);
-                // setTimeout(() => {
-                //     router.push(`/post/${finalFormDetails.id}`);
-                // }, 250);
+                // console.log(`Routing to /post/${finalFormDetails.id}`);
+                setTimeout(() => {
+                    router.push(`/post/${finalFormDetails.id}`);
+                }, 1000);
             } else {
                 setAlertMessage("Warning: Something went wrong when submitting. Please try again.")
                 console.log("Post form not successfully submitted.");
@@ -92,8 +91,8 @@ export default function EditPostForm({ editPostForm }: { editPostForm: PostInfo 
                     setAlertMessage("")
                 }, 4000);
             }
+            setLoading(false);
         }
-        setLoading(false);
     }
 
     if (loading) {
@@ -115,6 +114,61 @@ export default function EditPostForm({ editPostForm }: { editPostForm: PostInfo 
         <div className="flex justify-center flex-wrap w-full">
             {
                 alertMessage && alertMessage.length > 0 ? <div role="alert" className={setAlertClasses(alertMessage)}>
+                    {
+                        alertMessage.startsWith("Error") ? <div role="alert" className="alert alert-info">
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          className="h-6 w-6 shrink-0 stroke-current">
+                          <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="2"
+                            d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                        <span>{alertMessage}</span>
+                        </div> : alertMessage.startsWith("Warning") ? <div role="alert" className="alert alert-warning">
+                            <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                className="h-6 w-6 shrink-0 stroke-current"
+                                fill="none"
+                                viewBox="0 0 24 24">
+                                <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth="2"
+                                d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                            </svg>
+                            <span>{alertMessage}</span>
+                        </div> : alertMessage.startsWith("Success") ? <div role="alert" className="alert alert-success">
+                            <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                className="h-6 w-6 shrink-0 stroke-current"
+                                fill="none"
+                                viewBox="0 0 24 24">
+                                <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth="2"
+                                d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                            <span>{alertMessage}</span>
+                        </div> : <div role="alert" className="alert alert-info">
+                            <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                                className="h-6 w-6 shrink-0 stroke-current">
+                                <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                stroke-width="2"
+                                d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                            <span>{alertMessage}</span>
+                        </div>
+                    }
                     <svg
                         xmlns="http://www.w3.org/2000/svg"
                         className="h-6 w-6 shrink-0 stroke-current"

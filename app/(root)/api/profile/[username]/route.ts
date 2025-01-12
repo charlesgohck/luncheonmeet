@@ -1,6 +1,6 @@
 import { UserDetails } from "@/app/(root)/models/api";
 import { VALID_ABOUT_ME_REGEX, VALID_DISPLAY_NAME_REGEX, VALID_USERNAME_REGEX } from "@/app/lib/constants";
-import { getUserDetailsByUsername, editUserDetails, getUserDetails } from "@/app/lib/db";
+import { getUserDetailsByUsername, editUserDetails } from "@/app/lib/db";
 import { auth } from "@/auth";
 import { NextRequest, NextResponse } from "next/server";
 
