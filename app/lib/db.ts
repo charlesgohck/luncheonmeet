@@ -24,7 +24,7 @@ const config: PoolConfig = {
 export const dbPool = new Pool(config);
 
 export async function getUserDetails(email: string) {
-    const query: string = "SELECT username, about_me, profile_picture, display_name FROM dbo.user WHERE email = $1";
+    const query: string = "SELECT username, about_me, profile_picture, display_name, email FROM dbo.user WHERE email = $1";
     const client = await dbPool.connect();
     const parameters = [email];
     const checkUserResult = await client.query(query, parameters);
