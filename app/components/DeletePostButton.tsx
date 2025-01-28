@@ -9,14 +9,14 @@ import { setAlertClasses } from "../lib/utils";
 export default function DeletePostButton({ id, title }: { id: string, title: string }) {
 
     const dialogRef = useRef<HTMLDialogElement | null>(null);
-    const [alertMessage, setAlertMessage] = useState("");
+    const [alertMessage, setAlertMessage] = useState("Error: This is a test error.");
     const router = useRouter();
 
     const onConfirmDeletePost = async (event: React.FormEvent<HTMLButtonElement>) => {
         try {
             const response = await axios.delete(`/api/post/${id}`);
             // console.log(finalFormDetails);
-            if (response.status === 201) {
+            if (response.status === 202) {
                 setAlertMessage(`Success: Deleted Meet ${id}`);
                 setTimeout(() => {
                     router.push(`/post`);
@@ -48,22 +48,22 @@ export default function DeletePostButton({ id, title }: { id: string, title: str
 
     return <>
         {
-            alertMessage && alertMessage.length > 0 ? <div role="alert" className={setAlertClasses(alertMessage)}>
+            alertMessage && alertMessage.length > 0 ? <div role="alert" className={`${setAlertClasses(alertMessage)} fixed top-4 right-4 space-y-4 z-50`}>
                 {
-                    alertMessage.startsWith("Error") ? <div role="alert" className="alert alert-info">
+                    alertMessage.startsWith("Error") ? <div className="flex justify-start">
                         <svg
                             xmlns="http://www.w3.org/2000/svg"
                             fill="none"
                             viewBox="0 0 24 24"
                             className="h-6 w-6 shrink-0 stroke-current">
                             <path
-                                stroke-linecap="round"
+                                strokeLinecap="round"
                                 stroke-linejoin="round"
                                 stroke-width="2"
                                 d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                         </svg>
-                        <span>{alertMessage}</span>
-                    </div> : alertMessage.startsWith("Warning") ? <div role="alert" className="alert alert-warning">
+                        <span className="ml-1">{alertMessage}</span>
+                    </div> : alertMessage.startsWith("Warning") ? <div className="flex justify-start">
                         <svg
                             xmlns="http://www.w3.org/2000/svg"
                             className="h-6 w-6 shrink-0 stroke-current"
@@ -75,8 +75,8 @@ export default function DeletePostButton({ id, title }: { id: string, title: str
                                 strokeWidth="2"
                                 d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
                         </svg>
-                        <span>{alertMessage}</span>
-                    </div> : alertMessage.startsWith("Success") ? <div role="alert" className="alert alert-success">
+                        <span className="ml-1">{alertMessage}</span>
+                    </div> : alertMessage.startsWith("Success") ? <div className="flex justify-start">
                         <svg
                             xmlns="http://www.w3.org/2000/svg"
                             className="h-6 w-6 shrink-0 stroke-current"
@@ -88,34 +88,22 @@ export default function DeletePostButton({ id, title }: { id: string, title: str
                                 strokeWidth="2"
                                 d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                         </svg>
-                        <span>{alertMessage}</span>
-                    </div> : <div role="alert" className="alert alert-info">
+                        <span className="ml-1">{alertMessage}</span>
+                    </div> : <div role="alert" className="flex justify-start">
                         <svg
                             xmlns="http://www.w3.org/2000/svg"
                             fill="none"
                             viewBox="0 0 24 24"
                             className="h-6 w-6 shrink-0 stroke-current">
                             <path
-                                stroke-linecap="round"
+                                strokeLinecap="round"
                                 stroke-linejoin="round"
                                 stroke-width="2"
                                 d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                         </svg>
-                        <span>{alertMessage}</span>
+                        <span className="ml-1">{alertMessage}</span>
                     </div>
                 }
-                <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="h-6 w-6 shrink-0 stroke-current"
-                    fill="none"
-                    viewBox="0 0 24 24">
-                    <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth="2"
-                        d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
-                <span>{alertMessage}</span>
             </div> : <></>
         }
         <button className="btn btn-warning" onClick={() => dialogRef.current?.showModal()}>Delete</button>
