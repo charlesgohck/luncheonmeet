@@ -9,7 +9,7 @@ import { setAlertClasses } from "../lib/utils";
 export default function DeletePostButton({ id, title }: { id: string, title: string }) {
 
     const dialogRef = useRef<HTMLDialogElement | null>(null);
-    const [alertMessage, setAlertMessage] = useState("Error: This is a test error.");
+    const [alertMessage, setAlertMessage] = useState("");
     const router = useRouter();
 
     const onConfirmDeletePost = async (event: React.FormEvent<HTMLButtonElement>) => {
@@ -58,8 +58,8 @@ export default function DeletePostButton({ id, title }: { id: string, title: str
                             className="h-6 w-6 shrink-0 stroke-current">
                             <path
                                 strokeLinecap="round"
-                                stroke-linejoin="round"
-                                stroke-width="2"
+                                strokeLinejoin="round"
+                                strokeWidth="2"
                                 d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                         </svg>
                         <span className="ml-1">{alertMessage}</span>
@@ -97,8 +97,8 @@ export default function DeletePostButton({ id, title }: { id: string, title: str
                             className="h-6 w-6 shrink-0 stroke-current">
                             <path
                                 strokeLinecap="round"
-                                stroke-linejoin="round"
-                                stroke-width="2"
+                                strokeLinejoin="round"
+                                strokeWidth="2"
                                 d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                         </svg>
                         <span className="ml-1">{alertMessage}</span>
