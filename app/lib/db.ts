@@ -24,7 +24,7 @@ const config: PoolConfig = {
 export const dbPool = new Pool(config);
 
 export async function getUserDetails(email: string) {
-    const query: string = "SELECT username, about_me, profile_picture, display_name FROM dbo.user WHERE email = $1";
+    const query: string = "SELECT username, about_me, profile_picture, display_name, email FROM dbo.user WHERE email = $1";
     const client = await dbPool.connect();
     const parameters = [email];
     const checkUserResult = await client.query(query, parameters);
@@ -61,6 +61,16 @@ export async function editUserDetails(username: string, newUsername: string, dis
     client.release();
     return result.rows;
 }
+
+export async function updateUserProfilePicture(email: string, imageUrl: string) {
+    const client = await dbPool.connect();
+    const query: string = "UPDATE dbo.user SET profile_picture = $1 WHERE email = $2";
+    const result = await client.query(query, [imageUrl, email]);
+    // console.log(result);
+    client.release();
+    return result.rows;
+}
+
 
 export const MAX_DATE = new Date(9999, 11, 31);
 
@@ -113,6 +123,28 @@ export async function createNewPost(post: PostInfo) {
 
 // }
 
-// export async function deletePost(id: string) {
-    
-// }
+export async function deletePost(post: PostInfo) {
+    const client = await dbPool.connect();
+    try {
+        await client.query("BEGIN");
+        const addToArchiveTableQuery: string = "INSERT INTO dbo.meetup_archive (id, title, description, start_time, end_time, location, last_updated_at, last_updated_by, created_by) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)"
+        // Step 1: Send entry to archive
+        console.log(`Sending entry to archive: ${post.id}`);
+        await client.query(addToArchiveTableQuery, [post.id, post.title, post.description, post.start_time, post.end_time, post.location, post.last_updated_at, post.last_updated_by, post.created_by]);
+        // Step 2: Delete entry from main table
+        console.log(`Deleting entry: ${post.id}`);
+        const deletePostFromMainTableQuery: string = "DELETE FROM dbo.meetup WHERE id = $1";
+        await client.query(deletePostFromMainTableQuery, [post.id]);
+        // Step 3: Commit and Return success message
+        console.log(`Commiting archive and deletion: ${post.id}`);
+        await client.query("COMMIT");
+        return `Success: Delete Post operation successful for ${post.id}`;
+    } catch (error) {
+        // Log message and return generic error to the frontend
+        console.log(`Unknown error occurred: ${error}. Rolling back.`);
+        await client.query("ROLLBACK");
+        return `Error: Unknown error occurred when attempting to delete post with id ${post.id}`;
+    } finally {
+        client.release();
+    }
+}

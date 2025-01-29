@@ -1,7 +1,7 @@
 import { auth, signIn, signOut } from "@/auth"
 import Image from "next/image";
 import Link from "next/link";
-import { getUserDetails, insertUserDetails } from '@/app/lib/db';
+import { getUserDetails, insertUserDetails, updateUserProfilePicture } from '@/app/lib/db';
 
 export async function signInAction() {
     "use server"
@@ -24,6 +24,13 @@ async function checkAndAddUser() {
                 console.log(`User added: ${session.user.email}`);
             } else {
                 console.log(`User exists: ${session.user.email}`);
+                if (matchingUsers[0]["profile_picture"] === session.user.image) {
+                    console.log("User profile picture does not require updating.");
+                } else {
+                    const userImageUrl = session.user.image ? session.user.image : "N/A";
+                    await updateUserProfilePicture(session.user.email, userImageUrl);
+                    console.log("User profile picture updated.");
+                }
             }
         } else {
             console.log("User is null or does not have an email or something is not right.");

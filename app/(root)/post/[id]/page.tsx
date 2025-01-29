@@ -2,6 +2,8 @@ import { PostInfo } from "@/app/components/EditPostForm";
 import { getPostFull, getUserDetails } from "@/app/lib/db";
 import { UserDetails } from "../../models/api";
 import Link from "next/link";
+import { auth } from "@/auth";
+import DeletePostButton from "@/app/components/DeletePostButton";
 
 interface PageProps<T> { params: Promise<T>; }
 
@@ -43,6 +45,9 @@ export default async function PostWithId({ params }: PageProps<PostWithIdPagePar
         )
     }
 
+    const session = await auth();
+    const email = session?.user?.email;
+
     const creator: UserDetails = creatorDetails[0];
 
     return (
@@ -54,6 +59,9 @@ export default async function PostWithId({ params }: PageProps<PostWithIdPagePar
             <div className="prose-sm">
                 <div className="text-gray-400">Created By: {creator.display_name}</div>
             </div>
+            {
+                email === creator.email ? <DeletePostButton id={id} title={postInfo.title} /> : <></>
+            }
             <div className="flex w-full flex-col">
                 <div className="divider"></div>
             </div>
