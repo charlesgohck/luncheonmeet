@@ -14,7 +14,7 @@ export default async function PostWithId({ params }: PageProps<PostWithIdPagePar
     const id: string = (await params).id;
     const postInfo: PostInfo = await getPostFull(id);
 
-    if (postInfo === null || postInfo === undefined) {n
+    if (postInfo === null || postInfo === undefined) {
         return (
             <div className="text-center">
                 <div className="prose-2xl">

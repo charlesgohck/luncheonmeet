@@ -13,6 +13,7 @@ export default function DeletePostButton({ id, title }: { id: string, title: str
     const router = useRouter();
 
     const onConfirmDeletePost = async (event: React.FormEvent<HTMLButtonElement>) => {
+        event.preventDefault();
         try {
             const response = await axios.delete(`/api/post/${id}`);
             // console.log(finalFormDetails);
