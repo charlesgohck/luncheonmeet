@@ -62,6 +62,16 @@ export async function editUserDetails(username: string, newUsername: string, dis
     return result.rows;
 }
 
+export async function updateUserProfilePicture(email: string, imageUrl: string) {
+    const client = await dbPool.connect();
+    const query: string = "UPDATE dbo.user SET profile_picture = $1 WHERE email = $2";
+    const result = await client.query(query, [imageUrl, email]);
+    // console.log(result);
+    client.release();
+    return result.rows;
+}
+
+
 export const MAX_DATE = new Date(9999, 11, 31);
 
 // export async function getAllPostsByEmail(email: string, startTimeFilter: Date, endTimeFilter: Date, offset: number) {
