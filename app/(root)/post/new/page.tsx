@@ -26,7 +26,7 @@ export default async function Post() {
     return (
         <section className="p5">
             <div className="prose-2xl text-center">New Meet</div>
-            <EditPostForm editPostForm={newPost}  />
+            <EditPostForm editPostForm={newPost} mode="Create"  />
         </section>
     )
 }
