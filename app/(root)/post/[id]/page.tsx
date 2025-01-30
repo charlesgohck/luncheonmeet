@@ -5,9 +5,9 @@ import Link from "next/link";
 import { auth } from "@/auth";
 import DeletePostButton from "@/app/components/DeletePostButton";
 
-interface PageProps<T> { params: Promise<T>; }
+export interface PageProps<T> { params: Promise<T>; }
 
-interface PostWithIdPageParams { id: string }
+export interface PostWithIdPageParams { id: string }
 
 export default async function PostWithId({ params }: PageProps<PostWithIdPageParams>) {
 
@@ -59,9 +59,13 @@ export default async function PostWithId({ params }: PageProps<PostWithIdPagePar
             <div className="prose-sm">
                 <div className="text-gray-400">Created By: {creator.display_name}</div>
             </div>
-            {
-                email === creator.email ? <DeletePostButton id={id} title={postInfo.title} /> : <></>
-            }
+            <div className="flex justify-center">
+                {
+                    email === creator.email ? <DeletePostButton id={id} title={postInfo.title} /> : <></>
+                }
+                <div className="p-1"></div>
+                <Link href={`/post/edit/${id}`}><button className="btn btn-primary">Edit</button></Link>
+            </div>
             <div className="flex w-full flex-col">
                 <div className="divider"></div>
             </div>

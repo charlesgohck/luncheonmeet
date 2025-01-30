@@ -49,7 +49,7 @@ export default function DeletePostButton({ id, title }: { id: string, title: str
 
     return <>
         {
-            alertMessage && alertMessage.length > 0 ? <div role="alert" className={`${setAlertClasses(alertMessage)} fixed top-4 right-4 space-y-4 z-50`}>
+            alertMessage && alertMessage.length > 0 ? <div role="alert" className={`${setAlertClasses(alertMessage)} fixed top-4 space-y-4 z-50`}>
                 {
                     alertMessage.startsWith("Error") ? <div className="flex justify-start">
                         <svg

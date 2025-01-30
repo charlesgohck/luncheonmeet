@@ -106,7 +106,7 @@ export async function getPostFull(id: string) {
     return result.rows[0]
 }
 
-export async function createNewPost(post: PostInfo) {
+export async function createNewPost(post: PostInfo): Promise<string> {
     try {
         const client = await dbPool.connect();
         const query: string = "INSERT INTO dbo.meetup (id, title, description, start_time, end_time, location, last_updated_at, last_updated_by, created_by) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)";
@@ -119,9 +119,18 @@ export async function createNewPost(post: PostInfo) {
     }
 }
 
-// export async function updatePost(post: PostInfo) {
-
-// }
+export async function updatePost(post: PostInfo): Promise<string> {
+    try {
+        const client = await dbPool.connect();
+        const query: string = "UPDATE dbo.meetup SET title = $1, description = $2, start_time = $3, end_time = $4, location = $5, last_updated_at = $6, last_updated_by = $7, created_by = $8 WHERE id = $9";
+        await client.query(query, [post.title, post.description, post.start_time, post.end_time, post.location, post.last_updated_at, post.last_updated_by, post.created_by, post.id]);
+        client.release();
+        return `Success: Updated post ${post.id}.`;
+    } catch (error) {
+        console.log(`Error in DB utils updatePost: ${error}`);
+        return "Error: Internal server error. Unable to edit post.";
+    }
+}
 
 export async function deletePost(post: PostInfo) {
     const client = await dbPool.connect();

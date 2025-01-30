@@ -18,7 +18,7 @@ export interface PostInfo {
     created_by: string
 }
 
-export default function EditPostForm({ editPostForm }: { editPostForm: PostInfo }) {
+export default function EditPostForm({ editPostForm, mode }: { editPostForm: PostInfo, mode: string }) {
 
     const router = useRouter();
 
@@ -59,9 +59,9 @@ export default function EditPostForm({ editPostForm }: { editPostForm: PostInfo 
             const finalFormDetails: PostInfo = editPostFormDetails;
             finalFormDetails.start_time = new Date(startTimeString);
             finalFormDetails.end_time = new Date(endTimeString);
-            const response = await axios.post(`/api/post`, finalFormDetails);
+            const response = mode === "Edit" ? await axios.put(`/api/post`, finalFormDetails) : await axios.post(`/api/post`, finalFormDetails);
             // console.log(finalFormDetails);
-            if (response.status === 201) {
+            if (response.status === 201 || response.status === 200) {
                 // console.log("Post form submitted successfully!");
                 // console.log(response.data);
                 setAlertMessage("Success: Created new Meet!");
@@ -80,7 +80,7 @@ export default function EditPostForm({ editPostForm }: { editPostForm: PostInfo 
                 if (axiosError.response?.status === 400) {
                     console.log("Form input validation issue.");
                 } else if (axiosError.response?.status === 501 || axiosError.response!.status === 500) {
-                    console.log("Internal error sending POST form");
+                    console.log("Internal error sending POST/PUT form");
                 } else {
                     console.log("Unknown error occured with status code " + axiosError.response?.status);
                 }
@@ -113,7 +113,7 @@ export default function EditPostForm({ editPostForm }: { editPostForm: PostInfo 
     return (
         <div className="flex justify-center flex-wrap w-full">
             {
-                alertMessage && alertMessage.length > 0 ? <div role="alert" className={setAlertClasses(alertMessage)}>
+                alertMessage && alertMessage.length > 0 ? <div role="alert" className={`${setAlertClasses(alertMessage)} fixed top-4 space-y-4 z-50`}>
                     {
                         alertMessage.startsWith("Error") ? <div className="flex justify-start">
                             <svg
@@ -193,7 +193,7 @@ export default function EditPostForm({ editPostForm }: { editPostForm: PostInfo 
                 </div>
                 <input aria-label="Start Date and Time" type="datetime-local" className="input input-bordered w-full max-w-xs" name="endTime" value={endTimeString} onChange={handleEndTimeStringChange} />
                 <br />
-                <button className="btn btn-primary btn-outline" type="submit">Create Meet</button>
+                <button className="btn btn-primary btn-outline" type="submit">{mode === "Edit" ? "Edit Meet" : "Create Meet"}</button>
             </form>
         </div>
     )
