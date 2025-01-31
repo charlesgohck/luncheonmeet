@@ -208,11 +208,11 @@ export async function deletePost(post: PostInfo) {
     }
 }
 
-export async function getParticipantsForMeet(id: string): Promise<Array<MeetupRoomParicipant>> {
+export async function getParticipantsForMeet(meetId: string): Promise<Array<MeetupRoomParicipant>> {
     const client = await dbPool.connect();
     try {
-        const query: string = "SELECT id, email, meet_id, joined_at, has_left FROM dbo.meetup_room_participant WHERE id = $1";
-        const result = await client.query(query, [id]);
+        const query: string = "SELECT id, email, meet_id, joined_at, has_left FROM dbo.meetup_room_participant WHERE meet_id = $1";
+        const result = await client.query(query, [meetId]);
         client.release();
         return result.rows
     } catch (error) {
