@@ -18,8 +18,8 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{user
         console.log(payload);
         const { username, displayName, aboutMe }: { username: string, displayName: string, aboutMe: string } = payload;
         console.log("Checking if user is authorized.")
-        const userDetails: UserDetails[] = await getUserDetailsByUsername(username);
-        if (userDetails.length === 0 || userDetails[0].username !== username) {
+        const userDetails: UserDetails[] | null = await getUserDetailsByUsername(username);
+        if (userDetails === null || userDetails.length === 0 || userDetails[0].username !== username) {
             console.log("User is not authorized to access this endpoint");
             return NextResponse.json({ message: "User not authorized. POST /api/post aborted.", payload: false }, { status: 403 });
         }
