@@ -20,7 +20,8 @@ export default async function Post() {
         location: "",
         last_updated_at: new Date(),
         last_updated_by: email,
-        created_by: email
+        created_by: email,
+        max_participants: 20
     };
 
     return (

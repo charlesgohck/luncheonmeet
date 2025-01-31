@@ -1,5 +1,5 @@
-import { PostInfo } from "@/app/components/EditPostForm";
-import { getPostFull, getUserDetails } from "@/app/lib/db";
+import { MeetupRoomParicipant, PostInfo } from "@/app/components/EditPostForm";
+import { getParticipantsForMeet, getPostFull, getUserDetails } from "@/app/lib/db";
 import { UserDetails } from "../../models/api";
 import Link from "next/link";
 import { auth } from "@/auth";
@@ -13,6 +13,7 @@ export default async function PostWithId({ params }: PageProps<PostWithIdPagePar
 
     const id: string = (await params).id;
     const postInfo: PostInfo = await getPostFull(id);
+    const participantsForMeet: Array<MeetupRoomParicipant> = await getParticipantsForMeet(id);
 
     if (postInfo === null || postInfo === undefined) {
         return (
@@ -59,6 +60,7 @@ export default async function PostWithId({ params }: PageProps<PostWithIdPagePar
             <div className="prose-sm">
                 <div className="text-gray-400">Created By: {creator.display_name}</div>
             </div>
+            <div className="prose-sm">Participants: {participantsForMeet.length}/{postInfo.max_participants}</div>
             {
                 email === creator.email ? <div className="flex justify-center">
                     <DeletePostButton id={id} title={postInfo.title} />
