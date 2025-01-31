@@ -9,9 +9,9 @@ interface ProfileWithIdPageParams { username: string }
 export default async function ProfileWithId({ params }: PageProps<ProfileWithIdPageParams>) {
 
     let username: string = (await params).username;
-    const userDetails: UserDetails[] = await getUserDetailsByUsername(username);
+    const userDetails: UserDetails[] | null = await getUserDetailsByUsername(username);
 
-    if (userDetails.length !== 1) {
+    if (userDetails ===  null || userDetails.length !== 1) {
         return <section className="p5">
             <div className="flex justify-center flex-wrap w-full">
                 <h1 className="prose-2xl">404: User not found.</h1>

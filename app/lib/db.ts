@@ -36,7 +36,7 @@ export async function getUserDetails(email: string) {
     } catch (error) {
         console.log(`Error: getUserDetails received error: ${error}`);
         client.release();
-        return new Array();
+        return [];
     }
 }
 
@@ -124,7 +124,7 @@ export async function getPostsShort(startTimeFilter: Date, endTimeFilter: Date, 
     } catch (error) {
         client.release();
         console.log(`Error: getPostsShort error: ${error}`);
-        return new Array();
+        return [];
     }
 }
 
@@ -218,7 +218,7 @@ export async function getParticipantsForMeet(meetId: string): Promise<Array<Meet
     } catch (error) {
         console.log(`Error in getParticipantsForMeet: ${error}`);
         client.release();
-        return new Array();
+        return [];
     }
 }
 
