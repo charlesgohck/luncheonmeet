@@ -15,7 +15,16 @@ export interface PostInfo {
     location: string,
     last_updated_at: Date,
     last_updated_by: string,
-    created_by: string
+    created_by: string,
+    max_participants: number
+}
+
+export interface MeetupRoomParicipant {
+    id: string,
+    email: string,
+    meet_id: string,
+    joined_at: Date,
+    has_left: boolean
 }
 
 export default function EditPostForm({ editPostForm, mode }: { editPostForm: PostInfo, mode: string }) {
@@ -185,13 +194,17 @@ export default function EditPostForm({ editPostForm, mode }: { editPostForm: Pos
                 </div>
                 <input type="text" placeholder="Enter a location for your activity." className="input input-bordered w-full max-w-xs" name="location" maxLength={30} value={editPostFormDetails.location} onChange={handleTextBoxChange} />
                 <div className="label">
+                    <span className="label-text">Max Participants</span>
+                </div>
+                <input type="number" min="2" max="2000" placeholder="Enter max participants." className="input input-bordered w-full max-w-xs" name="max_participants" maxLength={30} value={editPostFormDetails.max_participants} onChange={handleTextBoxChange} />
+                <div className="label">
                     <span className="label-text">Start Date/Time Local Date Time</span>
                 </div>
-                <input aria-label="Start Date and Time" type="datetime-local" className="input input-bordered w-full max-w-xs" name="startTime" value={startTimeString} onChange={handleStartTimeStringChange} />
+                <input aria-label="Start Date and Time" type="datetime-local" className="input input-bordered w-full max-w-xs" name="start_time" value={startTimeString} onChange={handleStartTimeStringChange} />
                 <div className="label">
                     <span className="label-text">End Date/Time Local Date Time</span>
                 </div>
-                <input aria-label="Start Date and Time" type="datetime-local" className="input input-bordered w-full max-w-xs" name="endTime" value={endTimeString} onChange={handleEndTimeStringChange} />
+                <input aria-label="Start Date and Time" type="datetime-local" className="input input-bordered w-full max-w-xs" name="end_time" value={endTimeString} onChange={handleEndTimeStringChange} />
                 <br />
                 <button className="btn btn-primary btn-outline" type="submit">{mode === "Edit" ? "Edit Meet" : "Create Meet"}</button>
             </form>
