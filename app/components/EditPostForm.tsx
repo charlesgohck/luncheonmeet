@@ -24,7 +24,9 @@ export interface MeetupRoomParicipant {
     email: string,
     meet_id: string,
     joined_at: Date,
-    has_left: boolean
+    has_left: boolean,
+    profile_picture: string,
+    username: string
 }
 
 export default function EditPostForm({ editPostForm, mode }: { editPostForm: PostInfo, mode: string }) {

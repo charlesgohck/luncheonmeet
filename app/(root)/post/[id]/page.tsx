@@ -51,6 +51,8 @@ export default async function PostWithId({ params }: PageProps<PostWithIdPagePar
 
     const creator: UserDetails = creatorDetails[0];
 
+    console.log(participantsForMeet);
+
     return (
         <div className="p-1 text-center">
             <div className="prose-2xl">{postInfo.title}</div>
@@ -60,7 +62,10 @@ export default async function PostWithId({ params }: PageProps<PostWithIdPagePar
             <div className="prose-sm">
                 <div className="text-gray-400">Created By: {creator.display_name}</div>
             </div>
-            <div className="prose-sm">Participants: {participantsForMeet.length}/{postInfo.max_participants}</div>
+            <div className="prose-sm">Current Participants: {participantsForMeet.length}/{postInfo.max_participants}</div>
+            <div>
+                
+            </div>
             {
                 email === creator.email ? <div className="flex justify-center">
                     <DeletePostButton id={id} title={postInfo.title} />
