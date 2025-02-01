@@ -3,7 +3,7 @@ import generateUniqueUsername from './name-generator';
 import { UserDetails } from '../(root)/models/api';
 import fs from 'fs';
 import { VALID_GUID } from './constants';
-import { MeetupRoomParicipant, PostInfo } from '../components/EditPostForm';
+import { MeetupRoomParicipant as MeetupRoomParticipant, PostInfo } from '../components/EditPostForm';
 const { Pool } = pg;
 
 const config: PoolConfig = {
@@ -105,14 +105,6 @@ export async function updateUserProfilePicture(email: string, imageUrl: string) 
 
 export const MAX_DATE = new Date(9999, 11, 31);
 
-// export async function getAllPostsByEmail(email: string, startTimeFilter: Date, endTimeFilter: Date, offset: number) {
-
-// }
-
-// export async function getPostsByUsername(username: string, startTimeFilter: Date, endTimeFilter: Date, offset: number) {
-
-// }
-
 export async function getPostsShort(startTimeFilter: Date, endTimeFilter: Date, offset: number) {
     const client = await dbPool.connect();
     try {
@@ -208,10 +200,10 @@ export async function deletePost(post: PostInfo) {
     }
 }
 
-export async function getParticipantsForMeet(meetId: string): Promise<Array<MeetupRoomParicipant>> {
+export async function getParticipantsForMeet(meetId: string): Promise<Array<MeetupRoomParticipant>> {
     const client = await dbPool.connect();
     try {
-        const query: string = "SELECT id, email, meet_id, joined_at, has_left FROM dbo.meetup_room_participant WHERE meet_id = $1";
+        const query: string = "SELECT id, p.email as email, meet_id, joined_at, has_left, profile_picture, username FROM dbo.meetup_room_participant p LEFT JOIN dbo.user u ON p.email = u.email WHERE meet_id = $1";
         const result = await client.query(query, [meetId]);
         client.release();
         return result.rows
@@ -222,9 +214,18 @@ export async function getParticipantsForMeet(meetId: string): Promise<Array<Meet
     }
 }
 
-export async function insertParticipantForMeet(meetupRoomParticipant: MeetupRoomParicipant) {
+export async function insertParticipantForMeet(meetupRoomParticipant: MeetupRoomParticipant) {
     const client = await dbPool.connect();
     try {
+        const queryToCheckIfParticipantsExists: string = "SELECT id, email, meet_id, joined_at, has_left FROM dbo.meetup_room_participant WHERE id = $1 and email = $2";
+        const result = await client.query(queryToCheckIfParticipantsExists, [meetupRoomParticipant.meet_id, meetupRoomParticipant.email]);
+        if (result.rows.length > 0) {
+            console.log(`User ${meetupRoomParticipant.email} already exists. Aborting...`);
+            client.release();
+            return null
+        } else {
+            console.log(`User ${meetupRoomParticipant.email} does not exists. Proceed to insert participant.`);
+        }
         const query: string = "INSERT INTO dbo.meetup_room_participant (email, meet_id, joined_at) VALUES ($1, $2, $3)";
         await client.query(query, [meetupRoomParticipant.email, meetupRoomParticipant.meet_id, meetupRoomParticipant.joined_at]);
         const successMessage: string = `Success: Successfully added participant: ${meetupRoomParticipant.email}`;
