@@ -76,7 +76,7 @@ export default async function PostWithId({ params }: PageProps<PostWithIdPagePar
                 <div className="divider"></div>
             </div>
             <div className="prose-sm">Current Participants: {participantsForMeet.length}/{postInfo.max_participants}</div>
-            <div className="h-[25vh] overflow-y-auto">
+            <div className="max-h-[25vh] overflow-y-auto">
                 {
                     participantsForMeet.map(element => <Link href={`/profile/${element.username}`} key={`participant-${element.id}`}>
                         <div className="flex justify-center items-center">
