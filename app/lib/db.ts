@@ -6,6 +6,8 @@ import { VALID_GUID } from './constants';
 import { MeetupRoomParicipant as MeetupRoomParticipant, PostInfo } from '../components/EditPostForm';
 const { Pool } = pg;
 
+const cacertsFilePath = "./db_cacert.cer";
+
 const config: PoolConfig = {
     host: process.env.DB_HOST,
     user: process.env.DB_USERNAME,
@@ -16,9 +18,11 @@ const config: PoolConfig = {
     idleTimeoutMillis: 30000,
     connectionTimeoutMillis: 10000,
     idle_in_transaction_session_timeout: 20000,
-    ssl: {
+    ssl: process.env.NODE_ENV === "development" ? {
         rejectUnauthorized: true,
-        ca: fs.readFileSync("./db_cacert.cer")
+        ca: fs.readFileSync(cacertsFilePath)
+    } : {
+        rejectUnauthorized: false,
     }
 }
 

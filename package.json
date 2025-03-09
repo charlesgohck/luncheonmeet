@@ -3,8 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "echo $DB_CA_CERT > db_cacert.cer && next dev --turbopack",
-    "build": "echo $DB_CA_CERT > db_cacert.cer && next build",
+    "dev": "next dev --turbopack",
+    "build": "next build",
     "start": "echo $DB_CA_CERT > db_cacert.cer && next start",
     "lint": "next lint"
   },

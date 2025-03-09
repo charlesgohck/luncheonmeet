@@ -41,6 +41,7 @@ Create a new OAuth project under the Google Cloud console app. Get the google au
 
 Set up the environment variables in the .env file. It should look something like this:
 ```vim
+NODE_ENV=development
 DB_HOST=http://localhost:3000
 DB_USERNAME=postgres
 DB_PASSWORD=enteryourpasswordhere
@@ -77,6 +78,7 @@ npm run dev
 - Connect to the DB using pgAdmin4 or Datagrip. 
 - Create the luncheonmeet DB and create the dbo schema under it.
 - Run the init.sql script on the luncheonmeet.dbo schema
+- Download the DB CA Cert from the managed DB dashboard and copy its content from BEGIN CERTIFICATE to END CERTIFICATE to an encrypted environment variable for app platform named ```DB_CA_CERT```. This will be copied into the build when the project is started.
 
 ## Production: Vercel
 A similar process is used for launching the app to production on Vercel. However, you cannot whitelist Vercel IP Addresses unless you are on the Enterprise Plan. 
