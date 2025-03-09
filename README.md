@@ -42,11 +42,12 @@ Create a new OAuth project under the Google Cloud console app. Get the google au
 Set up the environment variables in the .env file. It should look something like this:
 ```vim
 NODE_ENV=development
-DB_HOST=http://localhost:3000
+DB_HOST=localhost
 DB_USERNAME=postgres
 DB_PASSWORD=enteryourpasswordhere
-DB_PORT=yourport
+DB_PORT=5432
 DB_DATABASE=luncheonmeet
+DB_CA_CERT=PLACEHOLDER_DONT_NEED_IN_DEVELOPMENT
 
 AUTH_GOOGLE_SECRET=YOUR_GOOGLE_AUTH_PROJECT_SECRET
 AUTH_SECRET=YOUR_GENERATED_PASSWORD

@@ -17,13 +17,16 @@ const config: PoolConfig = {
     max: 20,
     idleTimeoutMillis: 30000,
     connectionTimeoutMillis: 10000,
-    idle_in_transaction_session_timeout: 20000,
-    ssl: process.env.NODE_ENV === "development" ? {
+    idle_in_transaction_session_timeout: 20000
+}
+
+if (process.env.NODE_ENV === "production" || process.env.NODE_ENV === "test") {
+    config.ssl = {
         rejectUnauthorized: true,
         ca: fs.readFileSync(cacertsFilePath)
-    } : {
-        rejectUnauthorized: false,
-    }
+    };
+} else {
+    config.ssl = false;
 }
 
 export const dbPool = new Pool(config);

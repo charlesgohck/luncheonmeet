@@ -2,6 +2,8 @@ CREATE ROLE luncheonmeet_rw WITH LOGIN PASSWORD 'Password123';
 
 CREATE SCHEMA dbo;
 
+grant create, usage on schema dbo to luncheonmeet_rw;
+
 create table luncheonmeet.dbo."user"
 (
     email           varchar(128) not null
