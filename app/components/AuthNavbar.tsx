@@ -68,7 +68,7 @@ export async function AuthNavBar() {
                     </div>
                     <ul
                         tabIndex={0}
-                        className="menu menu-sm dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-52 p-2 shadow">
+                        className="menu menu-sm dropdown-content bg-base-100 rounded-box z-1 mt-3 w-52 p-2 shadow-sm">
                         <li><Link href={"/post"}>Meet</Link></li>
                         <li><a>About</a></li>
                     </ul>
@@ -95,7 +95,7 @@ export async function AuthNavBar() {
                             <div>
                                 <ul
                                     tabIndex={0}
-                                    className="menu menu-sm dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-52 p-2 shadow">
+                                    className="menu menu-sm dropdown-content bg-base-100 rounded-box z-1 mt-3 w-52 p-2 shadow-sm">
                                     <li>
                                         <Link href={"/profile"}>
                                             Profile

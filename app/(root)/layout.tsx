@@ -30,7 +30,7 @@ export default function RootLayout({
             className={`${geistSans.variable} ${geistMono.variable} antialiased flex flex-col min-h-screen`}
         >
             <AuthNavBar />
-            <div className="m-5 flex-grow">
+            <div className="min-h-screen bg-white dark:bg-black ">
                 {children}
             </div>
             <Footer />

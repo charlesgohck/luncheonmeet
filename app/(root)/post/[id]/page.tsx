@@ -81,7 +81,7 @@ export default async function PostWithId({ params }: PageProps<PostWithIdPagePar
                     participantsForMeet.map(element => <Link href={`/profile/${element.username}`} key={`participant-${element.id}`}>
                         <div className="flex justify-center items-center">
                             <div className="avatar m-1">
-                                <div className="w-8 rounded">
+                                <div className="w-8 rounded-sm">
                                     <Image width={20} height={20} src={element.profile_picture} alt={`Profile picture for user ${element.username}`} />
                                 </div>
                             </div>
