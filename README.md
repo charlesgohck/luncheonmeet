@@ -1,36 +1,86 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Getting Started
+## Pre-requisites
+- Node version manager with latest LTS version of node
+- For Windows Users, install Windows Subsystem Linux 2
+- For Windows Users, download Docker Desktop and install it with WSL 2 
 
-## Getting Started
-
-First, run the development server:
-
+## Clone the Project
+Change to WSL using the command below for windows or use the unix based terminal on Mac
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+wsl
+```
+Fork the repository (or use this one) on Github. Then head over to the Github repository settings or Github settings and create a new SSH key or deploy key: https://docs.github.com/en/authentication/connecting-to-github-with-ssh/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent
+
+Add your SSH private key location to the SSH config as an identity:
+```bash
+vim ~/.ssh/config
+```
+```vim
+IdentityFile pathtoprivatekeyfile
+IdentityFile pathtoanotherprivatekeyfile
+```
+Clone the repository
+```bash
+git clone git@github.com:charlesgohck/luncheonmeet.git
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Create the local database
+Change directory to the root of the project and create an ENV file. Add these two variables inside:
+```vim
+DOCKER_POSTGRES_PASSWORD=enteryourpsaswordhere
+DOCKER_POSTGRES_DB=luncheonmeet
+```
+Create the detached docker container with the postgres db, linked to a volume.
+```bash
+docker-compose up -d
+```
+Connect to the database using Datagrip or pgAdmin4.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Setting up environment variables
+Create a new OAuth project under the Google Cloud console app. Get the google auth client id and client secret.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Set up the environment variables in the .env file. It should look something like this:
+```vim
+DB_HOST=http://localhost:3000
+DB_USERNAME=postgres
+DB_PASSWORD=enteryourpasswordhere
+DB_PORT=yourport
+DB_DATABASE=luncheonmeet
 
-## Learn More
+AUTH_GOOGLE_SECRET=YOUR_GOOGLE_AUTH_PROJECT_SECRET
+AUTH_SECRET=YOUR_GENERATED_PASSWORD
+AUTH_GOOGLE_ID=YOUT_GOOGLE_AUTH_PROJECT_CLIENT_ID
+AUTH_URL=http://localhost:3000
+TZ=GMT
 
-To learn more about Next.js, take a look at the following resources:
+DOCKER_POSTGRES_PASSWORD=enteryourpsaswordhere
+DOCKER_POSTGRES_DB=luncheonmeet
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Development
+Install the npm dependencies using the following command:
+```bash
+npm install
+```
+Run the project for development
+```bash
+npm run dev
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Production: Digital Ocean
+- Head over to Digital Ocean and create a new app under App Platform. 
+- Enter the required production environment variables and encrypt the ones that are sensitive. 
+- Create a managed database. The root user will be doadmin.
+- Create a new read/write user on the Digital Ocean Managed Database dashboard.
+- Edit the init.sql script by replacing ```postgres``` with ```doadmin```.
+- It is recommended you ban all traffic to the database by default and whitelist only your static ip (if you have one) and your app platform app.
+- Connect to the DB using pgAdmin4 or Datagrip. 
+- Create the luncheonmeet DB and create the dbo schema under it.
+- Run the init.sql script on the luncheonmeet.dbo schema
 
-## Deploy on Vercel
+## Production: Vercel
+A similar process is used for launching the app to production on Vercel. However, you cannot whitelist Vercel IP Addresses unless you are on the Enterprise Plan. 
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Problems and Solutions
+### docker-compose.yml POSTGRES_USER not postgres causes build to fail
+I believe this is because POSTGRES_USER needs to be the root user which is postgres. Any other users can be created on the SQL command side later. So use ```postgres``` as the user. 
