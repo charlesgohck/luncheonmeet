@@ -2,7 +2,7 @@ import Image from "next/image";
 
 export function Footer() {
     return (
-        <footer className="footer bg-neutral text-neutral-content p-10">
+        <footer className="footer p-10">
             <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossOrigin="anonymous" referrerPolicy="no-referrer" />
             <aside>
                 <Image src={"/images/Logo.png"} alt={"Luncheon Meet Logo"} width={80} height={80}/>
