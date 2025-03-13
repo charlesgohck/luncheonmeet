@@ -30,6 +30,10 @@ Change directory to the root of the project and create an ENV file. Add these tw
 DOCKER_POSTGRES_PASSWORD=enteryourpsaswordhere
 DOCKER_POSTGRES_DB=luncheonmeet
 ```
+Create the certificates using the following command. This will help to enable SSL connection to the localhost docker database:
+```bash
+./generate-certs.sh
+```
 Create the detached docker container with the postgres db, linked to a volume.
 ```bash
 docker-compose up -d

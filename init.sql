@@ -1,4 +1,6 @@
-CREATE ROLE luncheonmeet_rw WITH LOGIN PASSWORD 'Password123';
+CREATE ROLE luncheonmeet_rw WITH LOGIN PASSWORD 'Password';
+
+create database luncheonmeet;
 
 CREATE SCHEMA dbo;
 
