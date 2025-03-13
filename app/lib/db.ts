@@ -1,12 +1,9 @@
 import pg, { PoolConfig } from 'pg';
 import generateUniqueUsername from './name-generator';
 import { UserDetails } from '../(root)/models/api';
-import fs from 'fs';
 import { VALID_GUID } from './constants';
 import { MeetupRoomParicipant as MeetupRoomParticipant, PostInfo } from '../components/EditPostForm';
 const { Pool } = pg;
-
-const cacertsFilePath = "./db_cacert.cer";
 
 const config: PoolConfig = {
     host: process.env.DB_HOST,
@@ -17,16 +14,11 @@ const config: PoolConfig = {
     max: 20,
     idleTimeoutMillis: 30000,
     connectionTimeoutMillis: 10000,
-    idle_in_transaction_session_timeout: 20000
-}
-
-if (process.env.NODE_ENV === "production" || process.env.NODE_ENV === "test") {
-    config.ssl = {
-        rejectUnauthorized: true,
-        ca: fs.readFileSync(cacertsFilePath)
-    };
-} else {
-    config.ssl = false;
+    idle_in_transaction_session_timeout: 20000,
+    ssl: {
+        rejectUnauthorized: process.env.NODE_ENV === "production" ?  true : false,
+        ca: process.env.DB_CA_CERT?.toString()
+    }
 }
 
 export const dbPool = new Pool(config);
