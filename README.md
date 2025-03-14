@@ -24,34 +24,17 @@ Clone the repository
 git clone git@github.com:charlesgohck/luncheonmeet.git
 ```
 
-## Create the local database
-Change directory to the root of the project and create an ENV file. Add these two variables inside:
-```vim
-DOCKER_POSTGRES_PASSWORD=enteryourpsaswordhere
-DOCKER_POSTGRES_DB=luncheonmeet
-```
-Create the certificates using the following command. This will help to enable SSL connection to the localhost docker database:
-```bash
-./generate-certs.sh
-```
-Create the detached docker container with the postgres db, linked to a volume.
-```bash
-docker-compose up -d
-```
-Connect to the database using Datagrip or pgAdmin4.
-
 ## Setting up environment variables
 Create a new OAuth project under the Google Cloud console app. Get the google auth client id and client secret.
 
 Set up the environment variables in the .env file. It should look something like this:
 ```vim
 NODE_ENV=development
-DB_HOST=localhost
-DB_USERNAME=postgres
-DB_PASSWORD=enteryourpasswordhere
-DB_PORT=5432
-DB_DATABASE=luncheonmeet
-DB_CA_CERT=PLACEHOLDER_DONT_NEED_IN_DEVELOPMENT
+POSTGRES_HOST=localhost
+POSTGRES_USERNAME=postgres
+POSTGRES_PASSWORD=enteryourpasswordhere
+POSTGRES_PORT=5432
+POSTGRES_DATABASE=luncheonmeet
 
 AUTH_GOOGLE_SECRET=YOUR_GOOGLE_AUTH_PROJECT_SECRET
 AUTH_SECRET=YOUR_GENERATED_PASSWORD
@@ -73,21 +56,7 @@ Run the project for development
 npm run dev
 ```
 
-## Production: Digital Ocean
-- Head over to Digital Ocean and create a new app under App Platform. 
-- Enter the required production environment variables and encrypt the ones that are sensitive. 
-- Create a managed database. The root user will be doadmin.
-- Create a new read/write user on the Digital Ocean Managed Database dashboard.
-- Edit the init.sql script by replacing ```postgres``` with ```doadmin```.
-- It is recommended you ban all traffic to the database by default and whitelist only your static ip (if you have one) and your app platform app.
-- Connect to the DB using pgAdmin4 or Datagrip. 
-- Create the luncheonmeet DB and create the dbo schema under it.
-- Run the init.sql script on the luncheonmeet.dbo schema
-- Download the DB CA Cert from the managed DB dashboard and copy its content from BEGIN CERTIFICATE to END CERTIFICATE to an encrypted environment variable for app platform named ```DB_CA_CERT```. This will be copied into the build when the project is started.
-
 ## Production: Vercel
-A similar process is used for launching the app to production on Vercel. However, you cannot whitelist Vercel IP Addresses unless you are on the Enterprise Plan. 
-
-## Problems and Solutions
-### docker-compose.yml POSTGRES_USER not postgres causes build to fail
-I believe this is because POSTGRES_USER needs to be the root user which is postgres. Any other users can be created on the SQL command side later. So use ```postgres``` as the user. 
+1. Host project on Vercel Hobby
+2. Create a Neon Postgres Free Plan Postgres DB
+3. Hook up the environment variables
