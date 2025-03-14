@@ -6,19 +6,16 @@ import { MeetupRoomParicipant as MeetupRoomParticipant, PostInfo } from '../comp
 const { Pool } = pg;
 
 const config: PoolConfig = {
-    host: process.env.DB_HOST,
-    user: process.env.DB_USERNAME,
-    password: process.env.DB_PASSWORD,
-    database: process.env.DB_DATABASE,
-    port: parseInt(process.env.DB_PORT || "not available"),
+    host: process.env.POSTGRES_HOST,
+    user: process.env.POSTGRES_USER,
+    password: process.env.POSTGRES_PASSWORD,
+    database: process.env.POSTGRES_DATABASE,
+    port: parseInt(process.env.POSTGRES_PORT || "not available"),
     max: 20,
     idleTimeoutMillis: 30000,
     connectionTimeoutMillis: 10000,
     idle_in_transaction_session_timeout: 20000,
-    ssl: {
-        rejectUnauthorized: process.env.NODE_ENV === "production" ?  true : false,
-        ca: process.env.DB_CA_CERT?.toString()
-    }
+    ssl: true
 }
 
 export const dbPool = new Pool(config);
