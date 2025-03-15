@@ -288,6 +288,6 @@ export async function getNewMessagesForChatRoom(meetingRoomId: string) {
     } catch (error) {
         console.log(`Error in getNewMessagesForChatRoom: ${error}`);
         client.release();
-        return `Error: Error in getNewMessagesForChatRoom for for meet id: ${meetingRoomId}`;
+        return [];
     }
 }
