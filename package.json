@@ -11,6 +11,8 @@
   "dependencies": {
     "@next/env": "^15.2.2",
     "@tailwindcss/typography": "^0.5.16",
+    "@vercel/analytics": "^1.5.0",
+    "@vercel/speed-insights": "^1.2.0",
     "axios": "^1.8.3",
     "next": "15.2.2",
     "next-auth": "^5.0.0-beta.25",
