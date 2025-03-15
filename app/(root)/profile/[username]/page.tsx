@@ -25,7 +25,7 @@ export default async function ProfileWithId({ params }: PageProps<ProfileWithIdP
     const displayName: string = userDetails[0].display_name;
 
     return (
-        <section className="p5">
+        <section className="p-5">
             <div className="flex justify-center flex-wrap w-full">
                 <div className="prose w-full text-center">Username</div>
                 <div className="prose-xl w-full text-center">{username}</div>

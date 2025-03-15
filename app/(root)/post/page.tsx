@@ -7,7 +7,7 @@ export default async function PostListing() {
     const postInfo: PostInfo[] = await getPostsShort(new Date(), MAX_DATE, 0);
     // console.log(postInfo);
 
-    return <section>
+    return <section className="p-5">
         <div className="flex flex-wrap justify-evenly">
             <div className="w-full text-center">
               <Link href={"/post/new"}><button className="btn btn-primary">New Meet</button></Link>

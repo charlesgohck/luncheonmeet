@@ -200,14 +200,15 @@ export default function EditPostForm({ editPostForm, mode }: { editPostForm: Pos
                 </div>
                 <input type="number" min="2" max="2000" placeholder="Enter max participants." className="input input-bordered w-full max-w-xs" name="max_participants" maxLength={30} value={editPostFormDetails.max_participants} onChange={handleTextBoxChange} />
                 <div className="label">
-                    <span className="label-text">Start Date/Time Local Date Time</span>
+                    <span className="label-text">Start Date/Time GMT</span>
                 </div>
                 <input aria-label="Start Date and Time" type="datetime-local" className="input input-bordered w-full max-w-xs" name="start_time" value={startTimeString} onChange={handleStartTimeStringChange} />
                 <div className="label">
-                    <span className="label-text">End Date/Time Local Date Time</span>
+                    <span className="label-text">End Date/Time GMT</span>
                 </div>
                 <input aria-label="Start Date and Time" type="datetime-local" className="input input-bordered w-full max-w-xs" name="end_time" value={endTimeString} onChange={handleEndTimeStringChange} />
                 <br />
+                <br/>
                 <button className="btn btn-primary btn-outline" type="submit">{mode === "Edit" ? "Edit Meet" : "Create Meet"}</button>
             </form>
         </div>
