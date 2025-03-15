@@ -232,6 +232,6 @@ export async function insertParticipantForMeet(meetupRoomParticipant: InsertMeet
     } catch (error) {
         console.log(`Error in insertParticipantForMeet: ${error}`);
         client.release();
-        return `Error: Error in insertParticipantForMeet for ${meetupRoomParticipant.email} for meet id ${meetupRoomParticipant.meet_id}`;
+        return `Error: Error in insertParticipantForMeet for ${meetupRoomParticipant.email} for meet id ${meetupRoomParticipant.meetId}`;
     }
 }

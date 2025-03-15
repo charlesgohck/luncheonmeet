@@ -1,8 +1,6 @@
-import { MeetupRoomParticipant } from "@/app/components/EditPostForm";
 import { InsertMeetupRoomParticipant } from "@/app/components/JoinMeetButton";
 import { insertParticipantForMeet } from "@/app/lib/db";
 import { auth } from "@/auth";
-import { randomUUID } from "crypto";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(req: NextRequest) {
