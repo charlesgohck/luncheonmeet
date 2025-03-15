@@ -19,7 +19,7 @@ export interface PostInfo {
     max_participants: number
 }
 
-export interface MeetupRoomParicipant {
+export interface MeetupRoomParticipant {
     id: string,
     email: string,
     meet_id: string,
@@ -208,7 +208,7 @@ export default function EditPostForm({ editPostForm, mode }: { editPostForm: Pos
                 </div>
                 <input aria-label="Start Date and Time" type="datetime-local" className="input input-bordered w-full max-w-xs" name="end_time" value={endTimeString} onChange={handleEndTimeStringChange} />
                 <br />
-                <br/>
+                <br />
                 <button className="btn btn-primary btn-outline" type="submit">{mode === "Edit" ? "Edit Meet" : "Create Meet"}</button>
             </form>
         </div>

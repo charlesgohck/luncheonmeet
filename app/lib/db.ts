@@ -2,7 +2,8 @@ import pg, { PoolConfig } from 'pg';
 import generateUniqueUsername from './name-generator';
 import { UserDetails } from '../(root)/models/api';
 import { VALID_GUID } from './constants';
-import { MeetupRoomParicipant as MeetupRoomParticipant, PostInfo } from '../components/EditPostForm';
+import { MeetupRoomParticipant as MeetupRoomParticipant, PostInfo } from '../components/EditPostForm';
+import { InsertMeetupRoomParticipant } from '../components/JoinMeetButton';
 const { Pool } = pg;
 
 const config: PoolConfig = {
@@ -210,11 +211,11 @@ export async function getParticipantsForMeet(meetId: string): Promise<Array<Meet
     }
 }
 
-export async function insertParticipantForMeet(meetupRoomParticipant: MeetupRoomParticipant) {
+export async function insertParticipantForMeet(meetupRoomParticipant: InsertMeetupRoomParticipant) {
     const client = await dbPool.connect();
     try {
         const queryToCheckIfParticipantsExists: string = "SELECT id, email, meet_id, joined_at, has_left FROM dbo.meetup_room_participant WHERE id = $1 and email = $2";
-        const result = await client.query(queryToCheckIfParticipantsExists, [meetupRoomParticipant.meet_id, meetupRoomParticipant.email]);
+        const result = await client.query(queryToCheckIfParticipantsExists, [meetupRoomParticipant.meetId, meetupRoomParticipant.email]);
         if (result.rows.length > 0) {
             console.log(`User ${meetupRoomParticipant.email} already exists. Aborting...`);
             client.release();
@@ -223,7 +224,7 @@ export async function insertParticipantForMeet(meetupRoomParticipant: MeetupRoom
             console.log(`User ${meetupRoomParticipant.email} does not exists. Proceed to insert participant.`);
         }
         const query: string = "INSERT INTO dbo.meetup_room_participant (email, meet_id, joined_at) VALUES ($1, $2, $3)";
-        await client.query(query, [meetupRoomParticipant.email, meetupRoomParticipant.meet_id, meetupRoomParticipant.joined_at]);
+        await client.query(query, [meetupRoomParticipant.email, meetupRoomParticipant.meetId, meetupRoomParticipant.joined_at]);
         const successMessage: string = `Success: Successfully added participant: ${meetupRoomParticipant.email}`;
         console.log(successMessage);
         client.release();
