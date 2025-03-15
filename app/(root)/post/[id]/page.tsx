@@ -1,4 +1,4 @@
-import { MeetupRoomParicipant, PostInfo } from "@/app/components/EditPostForm";
+import { MeetupRoomParticipant, PostInfo } from "@/app/components/EditPostForm";
 import { getParticipantsForMeet, getPostFull, getUserDetails } from "@/app/lib/db";
 import { UserDetails } from "../../models/api";
 import Link from "next/link";
@@ -6,6 +6,8 @@ import { auth } from "@/auth";
 import DeletePostButton from "@/app/components/DeletePostButton";
 import SignInRequest from "@/app/components/SignInRequest";
 import Image from "next/image";
+import JoinMeetButton from "@/app/components/JoinMeetButton";
+import LeaveMeetButton from "@/app/components/LeaveMeetButton";
 
 export interface PageProps<T> { params: Promise<T>; }
 
@@ -21,7 +23,7 @@ export default async function PostWithId({ params }: PageProps<PostWithIdPagePar
 
     const id: string = (await params).id;
     const postInfo: PostInfo = await getPostFull(id);
-    const participantsForMeet: Array<MeetupRoomParicipant> = await getParticipantsForMeet(id);
+    const participantsForMeet: Array<MeetupRoomParticipant> = await getParticipantsForMeet(id);
 
     if (postInfo === null || postInfo === undefined) {
         return (
@@ -57,7 +59,7 @@ export default async function PostWithId({ params }: PageProps<PostWithIdPagePar
     const creator: UserDetails = creatorDetails[0];
 
     return (
-        <div className="p-1 text-center">
+        <div className="p-5 text-center">
             <div className="prose-2xl">{postInfo.title}</div>
             <div className="prose-base">{postInfo.description}</div>
             <div className="prose-sm">{postInfo.start_time.toUTCString()} to {postInfo.end_time.toUTCString()}</div>
@@ -65,6 +67,7 @@ export default async function PostWithId({ params }: PageProps<PostWithIdPagePar
             <div className="prose-sm">
                 <div className="text-gray-400">Created By: {creator.display_name}</div>
             </div>
+            <br/>
             {
                 email === creator.email ? <div className="flex justify-center">
                     <DeletePostButton id={id} title={postInfo.title} />
@@ -90,6 +93,12 @@ export default async function PostWithId({ params }: PageProps<PostWithIdPagePar
                     </Link>)
                 }
             </div>
+            {
+                participantsForMeet.filter(participant => participant.email === email).length === 0 
+                ? <JoinMeetButton email={email} meetId={id} /> 
+                : postInfo.created_by === email ? <></> 
+                : <LeaveMeetButton meetId={id} />
+            }
             <div className="flex w-full flex-col">
                 <div className="divider"></div>
             </div>
