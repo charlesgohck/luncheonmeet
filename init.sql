@@ -117,3 +117,19 @@ create index meetup_room_participant_joined_at_email_index
 
 grant delete, insert, references, select, trigger, update on luncheonmeet.dbo.meetup_room_participant to luncheonmeet_rw;
 
+create table luncheonmeet.dbo.message
+(
+    id              uuid default gen_random_uuid()
+        constraint message_pk
+            primary key,
+    meeting_room_id uuid,
+    text            text,
+    sender_username text,
+    sender_email    text,
+    timestamp       timestamptz
+);
+
+comment on table dbo.message is 'Chat messages';
+
+create index message_meeting_room_id_timestamp_index
+    on luncheonmeet.dbo.message (meeting_room_id, timestamp);

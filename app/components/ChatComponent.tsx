@@ -3,8 +3,9 @@
 import { randomUUID } from "crypto";
 import { FormEvent, useEffect, useRef, useState } from "react";
 
-interface Message {
+export interface MeetingRoomMessage {
     id: string;
+    meetingRoomId: string,
     text: string;
     senderUsername: string;
     senderEmail: string;
@@ -16,7 +17,7 @@ export default function ChatComponent(
     : { meetingRoomId: string, currentUsername: string, currentUserEmail: string }
 ) {
 
-    const [messages, setMessages] = useState<Message[]>([]);
+    const [messages, setMessages] = useState<MeetingRoomMessage[]>([]);
     const [newMessage, setNewMessage] = useState<string>('');
     const [isMessageSending, setIsMessageSending] = useState<boolean>(false);
     const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -35,8 +36,9 @@ export default function ChatComponent(
         e.preventDefault();
         if (!newMessage.trim()) return;
 
-        const message: Message = {
+        const message: MeetingRoomMessage = {
             id: randomUUID(),
+            meetingRoomId: meetingRoomId,
             timestamp: new Date(),
             text: newMessage,
             senderEmail: currentUserEmail,
