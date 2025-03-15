@@ -8,6 +8,7 @@ import SignInRequest from "@/app/components/SignInRequest";
 import Image from "next/image";
 import JoinMeetButton from "@/app/components/JoinMeetButton";
 import LeaveMeetButton from "@/app/components/LeaveMeetButton";
+import ChatComponent from "@/app/components/ChatComponent";
 
 export interface PageProps<T> { params: Promise<T>; }
 
@@ -24,6 +25,7 @@ export default async function PostWithId({ params }: PageProps<PostWithIdPagePar
     const id: string = (await params).id;
     const postInfo: PostInfo = await getPostFull(id);
     const participantsForMeet: Array<MeetupRoomParticipant> = await getParticipantsForMeet(id);
+    const currentUserAsParticipant = participantsForMeet.find(participant => participant.email === email);
 
     if (postInfo === null || postInfo === undefined) {
         return (
@@ -102,8 +104,15 @@ export default async function PostWithId({ params }: PageProps<PostWithIdPagePar
             <div className="flex w-full flex-col">
                 <div className="divider"></div>
             </div>
-            <div className="prose-2xl">Meeting Room</div>
-            <div className="prose-sm text-gray-400">Work in progress</div>
+            {
+                currentUserAsParticipant === undefined 
+                ? <div className="prose">Please join to chat</div> 
+                : <ChatComponent 
+                    meetingRoomId={id} 
+                    currentUsername={currentUserAsParticipant.username} 
+                    currentUserEmail={currentUserAsParticipant.email}
+                />
+            }
             <div className="flex w-full flex-col">
                 <div className="divider"></div>
             </div>
