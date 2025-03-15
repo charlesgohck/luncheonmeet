@@ -214,7 +214,7 @@ export async function getParticipantsForMeet(meetId: string): Promise<Array<Meet
 export async function insertParticipantForMeet(meetupRoomParticipant: InsertMeetupRoomParticipant) {
     const client = await dbPool.connect();
     try {
-        const queryToCheckIfParticipantsExists: string = "SELECT id, email, meet_id, joined_at, has_left FROM dbo.meetup_room_participant WHERE id = $1 and email = $2";
+        const queryToCheckIfParticipantsExists: string = "SELECT id, email, meet_id, joined_at, has_left FROM dbo.meetup_room_participant WHERE meet_id = $1 and email = $2";
         const result = await client.query(queryToCheckIfParticipantsExists, [meetupRoomParticipant.meetId, meetupRoomParticipant.email]);
         if (result.rows.length > 0) {
             console.log(`User ${meetupRoomParticipant.email} already exists. Aborting...`);
@@ -225,7 +225,7 @@ export async function insertParticipantForMeet(meetupRoomParticipant: InsertMeet
         }
         const query: string = "INSERT INTO dbo.meetup_room_participant (email, meet_id, joined_at) VALUES ($1, $2, $3)";
         await client.query(query, [meetupRoomParticipant.email, meetupRoomParticipant.meetId, meetupRoomParticipant.joined_at]);
-        const successMessage: string = `Success: Successfully added participant: ${meetupRoomParticipant.email}`;
+        const successMessage: string = `Success: Added ${meetupRoomParticipant.email} to meet ${meetupRoomParticipant.meetId}`;
         console.log(successMessage);
         client.release();
         return successMessage;
@@ -233,5 +233,30 @@ export async function insertParticipantForMeet(meetupRoomParticipant: InsertMeet
         console.log(`Error in insertParticipantForMeet: ${error}`);
         client.release();
         return `Error: Error in insertParticipantForMeet for ${meetupRoomParticipant.email} for meet id ${meetupRoomParticipant.meetId}`;
+    }
+}
+
+export async function deleteParticipantForMeet(email: string, meetId: string) {
+    const client = await dbPool.connect();
+    try {
+        const queryToCheckIfParticipantsExists: string = "SELECT id, email, meet_id, joined_at, has_left FROM dbo.meetup_room_participant WHERE meet_id = $1 and email = $2";
+        const result = await client.query(queryToCheckIfParticipantsExists, [meetId, email]);
+        if (result.rows.length === 0) {
+            console.log(`User ${email} does not exists. Aborting...`);
+            client.release();
+            return "Error: User does not exist."
+        } else {
+            console.log(`User ${email} exists. Proceed to delete participant.`);
+        }
+        const query: string = "DELETE FROM dbo.meetup_room_participant WHERE meet_id = $1 AND email = $2";
+        await client.query(query, [meetId, email]);
+        const successMessage: string = `Success: ${email} left from meetup ${meetId}`;
+        console.log(successMessage);
+        client.release();
+        return successMessage;
+    } catch (error) {
+        console.log(`Error in deleteParticipantForMeet: ${error}`);
+        client.release();
+        return `Error: Error in deleteParticipantForMeet for ${email} for meet id: ${meetId}`;
     }
 }
