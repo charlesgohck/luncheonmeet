@@ -1,15 +1,23 @@
 'use client'
 
-import { faBowlFood } from "@fortawesome/free-solid-svg-icons";
+import { faMessage } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { motion } from "motion/react";
 
 export default function HomeAboutSection() {
     return (
-        <section className="bg-base-100 py-12 p-5">
-            <div className="container mx-auto flex flex-col lg:flex-row items-center gap-8">
+        <section className="bg-base-100 py-20">
+            <div className="flex flex-justify-center flex-wrap">
                 <motion.div
-                    className="lg:w-1/2"
+                    className="lg:w-1/2 flex justify-center items-center w-full p-10"
+                    initial={{ opacity: 0, x: 50 }}
+                    whileInView={{ opacity: 1, x: 0 }}
+                    transition={{ duration: 0.5 }}
+                >
+                    <FontAwesomeIcon icon={faMessage} size="6x" className="text-primary" />
+                </motion.div>
+                <motion.div
+                    className="lg:w-1/2 w-full p-10"
                     initial={{ opacity: 0, x: -50 }}
                     whileInView={{ opacity: 1, x: 0 }}
                     transition={{ duration: 0.5 }}
@@ -21,14 +29,6 @@ export default function HomeAboutSection() {
                     <p className="mt-2 text-lg">
                         The ad-hoc meetups idea came from a discussion between colleagues about the need for an adhoc meetups application that could help individuals connect quickly and communicate with each other in-app.
                     </p>
-                </motion.div>
-                <motion.div
-                    className="lg:w-1/2 flex justify-center"
-                    initial={{ opacity: 0, x: 50 }}
-                    whileInView={{ opacity: 1, x: 0 }}
-                    transition={{ duration: 0.5 }}
-                >
-                    <FontAwesomeIcon icon={faBowlFood} size="6x" className="text-primary" />
                 </motion.div>
             </div>
         </section>
