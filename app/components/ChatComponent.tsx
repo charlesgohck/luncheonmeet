@@ -2,7 +2,7 @@
 
 import axios from "axios";
 import { v4 as uuidv4 } from 'uuid';
-import { FormEvent, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 export interface MeetingRoomMessage {
     id: string;
@@ -31,7 +31,7 @@ export default function ChatComponent(
 
     useEffect(() => {
         handleRefreshMessages();
-    }, [])
+    });
 
     useEffect(() => {
         scrollToBottom();
