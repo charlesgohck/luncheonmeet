@@ -49,7 +49,13 @@ export default function ChatComponent(
     }, [meetingRoomId]);
 
     useEffect(() => {
-        handleRefreshMessages();
+        let timerId: ReturnType<typeof setTimeout>;
+        const tick = () => {
+            handleRefreshMessages();
+            timerId = setTimeout(tick, 30000);
+        }
+        tick();
+        return () => clearTimeout(timerId);
     }, [handleRefreshMessages]);
 
     useEffect(() => {
