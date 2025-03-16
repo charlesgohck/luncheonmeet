@@ -10,16 +10,16 @@ export default function HomeAboutSection() {
             <div className="flex flex-justify-center flex-wrap">
                 <motion.div
                     className="lg:w-1/2 flex justify-center items-center w-full p-10"
-                    initial={{ opacity: 0, x: 50 }}
-                    whileInView={{ opacity: 1, x: 0 }}
+                    initial={{ opacity: 0, y: 50 }}
+                    whileInView={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.5 }}
                 >
                     <FontAwesomeIcon icon={faMessage} size="6x" className="text-primary" />
                 </motion.div>
                 <motion.div
                     className="lg:w-1/2 w-full p-10"
-                    initial={{ opacity: 0, x: -50 }}
-                    whileInView={{ opacity: 1, x: 0 }}
+                    initial={{ opacity: 0, y: 50 }}
+                    whileInView={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.5 }}
                 >
                     <h2 className="text-3xl font-bold">About Luncheon Meet</h2>

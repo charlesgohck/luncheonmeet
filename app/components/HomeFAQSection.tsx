@@ -22,7 +22,7 @@ const faqs = [
 export default function HomeFAQSection() {
     return (
         <section className="bg-base-200 py-20">
-            <div className="container mx-auto">
+            <div className="mx-auto">
                 <h2 className="text-3xl font-bold text-center mb-8">Frequently Asked Questions</h2>
                 <div className="space-y-4">
                     {faqs.map((faq, index) => (
