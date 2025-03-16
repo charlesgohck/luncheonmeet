@@ -4,6 +4,7 @@ import { UserDetails } from '../(root)/models/api';
 import { VALID_GUID } from './constants';
 import { MeetupRoomParticipant as MeetupRoomParticipant, PostInfo } from '../components/EditPostForm';
 import { InsertMeetupRoomParticipant } from '../components/JoinMeetButton';
+import { MeetingRoomMessage } from '../components/ChatComponent';
 const { Pool } = pg;
 
 const config: PoolConfig = {
@@ -258,5 +259,46 @@ export async function deleteParticipantForMeet(email: string, meetId: string) {
         console.log(`Error in deleteParticipantForMeet: ${error}`);
         client.release();
         return `Error: Error in deleteParticipantForMeet for ${email} for meet id: ${meetId}`;
+    }
+}
+
+export async function insertNewMessageForChatRoom(meetingRoomMessage: MeetingRoomMessage) {
+    const client = await dbPool.connect();
+    try {
+        const query: string = "INSERT INTO dbo.message (meeting_room_id, text, sender_username, sender_email, timestamp) VALUES ($1, $2, $3, $4, NOW())";
+        const result = await client.query(query, [meetingRoomMessage.meetingRoomId, meetingRoomMessage.text, meetingRoomMessage.senderUsername, meetingRoomMessage.senderEmail]);
+        console.log(`${result.rowCount} rows affected`);
+        client.release();
+        return result;
+    } catch (error) {
+        console.log(`Error in insertNewMessageForChatRoom: ${error}`);
+        client.release();
+        return `Error: Error in insertNewMessageForChatRoom for ${meetingRoomMessage.senderEmail} for meet id: ${meetingRoomMessage.meetingRoomId}`;
+    }
+}
+
+export async function getNewMessagesForChatRoom(meetingRoomId: string) {
+    const client = await dbPool.connect();
+    try {
+        const query: string = "SELECT id, meeting_room_id, text, sender_username, sender_email, timestamp FROM dbo.message WHERE meeting_room_id = $1 ORDER BY timestamp ASC";
+        const result = await client.query(query, [meetingRoomId]);
+        console.log(`${result.rowCount} rows retrieved`);
+        client.release();
+        const rows = result.rows;
+        const processedResult: MeetingRoomMessage[] = rows.map(element => {
+            return {
+                id: element["id"],
+                meetingRoomId: element["meeting_room_id"],
+                text: element["text"],
+                senderUsername: element["sender_username"],
+                senderEmail: element["sender_email"],
+                timestamp: element["timestamp"]
+            }
+        });
+        return processedResult;
+    } catch (error) {
+        console.log(`Error in getNewMessagesForChatRoom: ${error}`);
+        client.release();
+        return [];
     }
 }
