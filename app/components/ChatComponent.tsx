@@ -2,7 +2,7 @@
 
 import axios from "axios";
 import { v4 as uuidv4 } from 'uuid';
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 export interface MeetingRoomMessage {
     id: string;
@@ -26,18 +26,13 @@ export default function ChatComponent(
 
     // Auto-scroll to the latest message
     const scrollToBottom = () => {
-        messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+        if (messagesEndRef.current) {
+            messagesEndRef.current.scrollTop = messagesEndRef.current.scrollHeight;
+        }
     };
 
-    useEffect(() => {
-        handleRefreshMessages();
-    });
-
-    useEffect(() => {
-        scrollToBottom();
-    }, [messages]);
-
-    const handleRefreshMessages = () => {
+    const handleRefreshMessages = useCallback(() => {
+        setIsMessageLoading(true);
         axios.get(`/api/chat/${meetingRoomId}`)
             .then(data => {
                 if (data.status === 200) {
@@ -48,9 +43,18 @@ export default function ChatComponent(
             }).catch((err) => {
                 setToastMessage(`Error: ${err}`);
             }).finally(() => {
+                setIsMessageLoading(false);
                 resetToast();
             })
-    }
+    }, [meetingRoomId]);
+
+    useEffect(() => {
+        handleRefreshMessages();
+    }, [handleRefreshMessages]);
+
+    useEffect(() => {
+        scrollToBottom();
+    }, [messages]);
 
     // Handle message submission
     const handleSubmitMessage = () => {
@@ -112,7 +116,7 @@ export default function ChatComponent(
             </div>
 
             {/* Messages display area */}
-            <div className="flex-1 p-4 overflow-y-auto">
+            <div className="flex-1 p-4 overflow-y-auto" ref={messagesEndRef}>
                 {
                     messages.map(message => (
                         <div
@@ -128,7 +132,6 @@ export default function ChatComponent(
                         </div>
                     ))
                 }
-                <div ref={messagesEndRef} />
             </div>
 
             {/* Message input form */}
