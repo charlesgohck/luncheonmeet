@@ -70,7 +70,6 @@ export async function AuthNavBar() {
                         tabIndex={0}
                         className="menu menu-sm dropdown-content bg-base-100 rounded-box z-1 mt-3 w-52 p-2 shadow-sm">
                         <li><Link href={"/post"}>Meet</Link></li>
-                        <li><a>About</a></li>
                     </ul>
                 </div>
                 <Link className="btn btn-ghost text-xl" href={"/"}>
@@ -80,7 +79,6 @@ export async function AuthNavBar() {
             <div className="navbar-center hidden lg:flex">
                 <ul className="menu menu-horizontal px-1">
                     <li><Link href={"/post"}>Meet</Link></li>
-                    <li><a>About</a></li>
                 </ul>
             </div>
             <div className="navbar-end">
