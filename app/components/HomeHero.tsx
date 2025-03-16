@@ -11,8 +11,8 @@ export default function HomeHero() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8 }}
             >
-                <h1 className="text-5xl font-bold">Luncheon Meet</h1>
-                <p className="py-6 text-lg">The Ad-Hoc Meetups Application</p>
+                <h1 className="text-8xl font-bold">Luncheon Meet</h1>
+                <p className="py-6 text-3xl">The Ad-Hoc Meetups Application</p>
                 <Link href={"/post"}><button className="btn btn-primary">Get Started</button></Link>
             </motion.div>
         </section>
