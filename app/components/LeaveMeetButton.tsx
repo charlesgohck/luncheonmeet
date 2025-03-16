@@ -25,7 +25,15 @@ export default function LeaveMeetButton({ meetId } : { meetId: string }) {
             }).catch(err => {
                 setToastMessage(err);
                 setIsProcessing(false);
-            })
+            }).finally(() => {
+                resetToast();
+            });
+    }
+    
+    const resetToast = () => {
+        setTimeout(() => {
+            setToastMessage("");
+        }, 5000)
     }
     
     return <div>

@@ -1,6 +1,7 @@
 'use client'
 
-import { randomUUID } from "crypto";
+import axios from "axios";
+import { v4 as uuidv4 } from 'uuid';
 import { FormEvent, useEffect, useRef, useState } from "react";
 
 export interface MeetingRoomMessage {
@@ -20,12 +21,28 @@ export default function ChatComponent(
     const [messages, setMessages] = useState<MeetingRoomMessage[]>([]);
     const [newMessage, setNewMessage] = useState<string>('');
     const [isMessageSending, setIsMessageSending] = useState<boolean>(false);
+    const [toastMessage, setToastMessage] = useState<string>("");
     const messagesEndRef = useRef<HTMLDivElement>(null);
 
     // Auto-scroll to the latest message
     const scrollToBottom = () => {
         messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
     };
+
+    useEffect(() => {
+        axios.get(`/api/chat/${meetingRoomId}`)
+            .then(data => {
+                if (data.status === 200) {
+                    setMessages(data.data.payload);
+                } else {
+                    setToastMessage("Error: Unable to load messages.");
+                }
+            }).catch((err) => {
+                setToastMessage(`Error: ${err}`);
+            }).finally(() => {
+                resetToast();
+            })
+    }, [])
 
     useEffect(() => {
         scrollToBottom();
@@ -37,7 +54,7 @@ export default function ChatComponent(
         if (!newMessage.trim()) return;
 
         const message: MeetingRoomMessage = {
-            id: randomUUID(),
+            id: uuidv4(),
             meetingRoomId: meetingRoomId,
             timestamp: new Date(),
             text: newMessage,
@@ -45,12 +62,47 @@ export default function ChatComponent(
             senderUsername: currentUsername
         };
 
+        setIsMessageSending(true);
+
+        axios.post("/api/chat", message)
+            .then(data => {
+                if (data.status === 201) {
+                    setToastMessage("Message sent.");
+                    setMessages(data.data.payload);
+                } else {
+                    setToastMessage("Unable to send message.");
+                }
+            }).catch(err => {
+                setToastMessage(`Error: ${err}`);
+            }).finally(() => {
+                resetToast();
+                setIsMessageSending(false);
+            });
+
         setMessages((prevMessages) => [...prevMessages, message]);
         setNewMessage('');
     };
 
+    const resetToast = () => {
+        setTimeout(() => {
+            setToastMessage("");
+        }, 5000)
+    }
+
     return (
         <div className="flex flex-col h-[500px] w-full max-w-md mx-auto rounded-lg shadow-lg bg-base-100">
+            {
+                toastMessage.length === 0 ? <></> : <div className="toast toast-top toast-center">
+                    {
+                        toastMessage.includes("Success") ? <div className="alert alert-success">
+                            <span>{toastMessage}</span>
+                        </div> : <div className="alert alert-error">
+                            <span>{toastMessage}</span>
+                        </div>
+                    }
+                </div>
+            }
+            
             {/* Chat header */}
             <div className="bg-primary text-primary-content px-4 py-3 rounded-t-lg">
                 <h2 className="text-lg font-bold">Meeting Room</h2>
@@ -58,19 +110,21 @@ export default function ChatComponent(
 
             {/* Messages display area */}
             <div className="flex-1 p-4 overflow-y-auto">
-                {messages.map((message) => (
-                    <div
-                        key={message.id}
-                        className={`chat ${message.senderEmail === currentUserEmail ? 'chat-end' : 'chat-start'}`}
-                    >
-                        <div className={`chat-bubble ${message.senderEmail === currentUserEmail ? 'chat-bubble-primary' : 'chat-bubble-secondary'}`}>
-                            {message.text}
+                {
+                    messages.map(message => (
+                        <div
+                            key={message.id}
+                            className={`chat ${message.senderEmail === currentUserEmail ? 'chat-end' : 'chat-start'}`}
+                        >
+                            <div className={`chat-bubble ${message.senderEmail === currentUserEmail ? 'chat-bubble-primary' : 'chat-bubble-secondary'}`}>
+                                {message.text}
+                            </div>
+                            <div className="chat-footer opacity-50 text-xs mt-1">
+                                {`${new Date(message.timestamp).toLocaleDateString()} ${new Date(message.timestamp).toLocaleTimeString()}`}
+                            </div>
                         </div>
-                        <div className="chat-footer opacity-50 text-xs mt-1">
-                            {`${message.timestamp.toLocaleDateString()} ${message.timestamp.toLocaleTimeString()}`}
-                        </div>
-                    </div>
-                ))}
+                    ))
+                }
                 <div ref={messagesEndRef} />
             </div>
 
@@ -88,7 +142,7 @@ export default function ChatComponent(
                         type="submit"
                         className="btn btn-primary self-end"
                     >
-                        Send Message
+                        {isMessageSending ? <span className="loading loading-bars loading-xs"></span> : "Send"}
                     </button>
                 </div>
             </form>

@@ -284,7 +284,18 @@ export async function getNewMessagesForChatRoom(meetingRoomId: string) {
         const result = await client.query(query, [meetingRoomId]);
         console.log(`${result.rowCount} rows retrieved`);
         client.release();
-        return result.rows;
+        const rows = result.rows;
+        const processedResult: MeetingRoomMessage[] = rows.map(element => {
+            return {
+                id: element["id"],
+                meetingRoomId: element["meeting_room_id"],
+                text: element["text"],
+                senderUsername: element["sender_username"],
+                senderEmail: element["sender_email"],
+                timestamp: element["timestamp"]
+            }
+        });
+        return processedResult;
     } catch (error) {
         console.log(`Error in getNewMessagesForChatRoom: ${error}`);
         client.release();
