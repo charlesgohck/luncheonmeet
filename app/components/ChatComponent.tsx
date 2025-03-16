@@ -20,7 +20,7 @@ export default function ChatComponent(
 
     const [messages, setMessages] = useState<MeetingRoomMessage[]>([]);
     const [newMessage, setNewMessage] = useState<string>('');
-    const [isMessageSending, setIsMessageSending] = useState<boolean>(false);
+    const [isMessageLoading, setIsMessageLoading] = useState<boolean>(false);
     const [toastMessage, setToastMessage] = useState<string>("");
     const messagesEndRef = useRef<HTMLDivElement>(null);
 
@@ -30,6 +30,14 @@ export default function ChatComponent(
     };
 
     useEffect(() => {
+        handleRefreshMessages();
+    }, [])
+
+    useEffect(() => {
+        scrollToBottom();
+    }, [messages]);
+
+    const handleRefreshMessages = () => {
         axios.get(`/api/chat/${meetingRoomId}`)
             .then(data => {
                 if (data.status === 200) {
@@ -42,15 +50,10 @@ export default function ChatComponent(
             }).finally(() => {
                 resetToast();
             })
-    }, [])
-
-    useEffect(() => {
-        scrollToBottom();
-    }, [messages]);
+    }
 
     // Handle message submission
-    const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
-        e.preventDefault();
+    const handleSubmitMessage = () => {
         if (!newMessage.trim()) return;
 
         const message: MeetingRoomMessage = {
@@ -62,21 +65,21 @@ export default function ChatComponent(
             senderUsername: currentUsername
         };
 
-        setIsMessageSending(true);
+        setIsMessageLoading(true);
 
         axios.post("/api/chat", message)
             .then(data => {
                 if (data.status === 201) {
-                    setToastMessage("Message sent.");
+                    setToastMessage("Success: Message sent.");
                     setMessages(data.data.payload);
                 } else {
-                    setToastMessage("Unable to send message.");
+                    setToastMessage("Error: Unable to send message.");
                 }
             }).catch(err => {
                 setToastMessage(`Error: ${err}`);
             }).finally(() => {
                 resetToast();
-                setIsMessageSending(false);
+                setIsMessageLoading(false);
             });
 
         setMessages((prevMessages) => [...prevMessages, message]);
@@ -120,7 +123,7 @@ export default function ChatComponent(
                                 {message.text}
                             </div>
                             <div className="chat-footer opacity-50 text-xs mt-1">
-                                {`${new Date(message.timestamp).toLocaleDateString()} ${new Date(message.timestamp).toLocaleTimeString()}`}
+                                {`${message.senderEmail === currentUserEmail ? "You" : message.senderUsername}: ${new Date(message.timestamp).toLocaleDateString()} ${new Date(message.timestamp).toLocaleTimeString()}`}
                             </div>
                         </div>
                     ))
@@ -129,23 +132,31 @@ export default function ChatComponent(
             </div>
 
             {/* Message input form */}
-            <form onSubmit={handleSubmit} className="border-t border-base-300 p-4">
-                <div className="flex flex-col space-y-2">
-                    <textarea
-                        className="textarea textarea-bordered w-full resize-none"
-                        placeholder="Type your message here..."
-                        value={newMessage}
-                        onChange={(e) => setNewMessage(e.target.value)}
-                        rows={3}
-                    ></textarea>
+            <div className="flex flex-col space-y-2 m-1">
+                <textarea
+                    className="textarea textarea-bordered w-full resize-none"
+                    placeholder="Type your message here..."
+                    value={newMessage}
+                    onChange={(e) => setNewMessage(e.target.value)}
+                    rows={3}
+                ></textarea>
+                <div className="self-end">
                     <button
                         type="submit"
-                        className="btn btn-primary self-end"
+                        className="btn btn-success self-end m-1"
+                        onClick={handleRefreshMessages}
                     >
-                        {isMessageSending ? <span className="loading loading-bars loading-xs"></span> : "Send"}
+                        {isMessageLoading ? <span className="loading loading-bars loading-xs"></span> : "Refresh"}
+                    </button>
+                    <button
+                        type="submit"
+                        className="btn btn-primary self-end m-1"
+                        onClick={handleSubmitMessage}
+                    >
+                        {isMessageLoading ? <span className="loading loading-bars loading-xs"></span> : "Send"}
                     </button>
                 </div>
-            </form>
+            </div>
         </div>
     );
 }
