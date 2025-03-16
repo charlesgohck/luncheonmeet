@@ -5,7 +5,7 @@ import HomeHero from "../components/HomeHero";
 
 export default function Home() {
     return (
-        <div className="max-w-screen-sm sm:max-w-screen-md md:max-w-screen-lg lg:max-w-screen-xl mx-auto">
+        <div>
             <HomeHero />
             <HomeFeaturesSection/>
             <HomeAboutSection/>
