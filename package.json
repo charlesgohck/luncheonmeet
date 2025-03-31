@@ -13,8 +13,6 @@
     "@fortawesome/react-fontawesome": "^0.2.2",
     "@next/env": "^15.2.4",
     "@tailwindcss/typography": "^0.5.16",
-    "@vercel/analytics": "^1.5.0",
-    "@vercel/speed-insights": "^1.2.0",
     "axios": "^1.8.4",
     "motion": "^12.6.2",
     "next": "15.2.4",
