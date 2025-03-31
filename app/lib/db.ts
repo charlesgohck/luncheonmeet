@@ -7,8 +7,6 @@ import { InsertMeetupRoomParticipant } from '../components/JoinMeetButton';
 import { MeetingRoomMessage } from '../components/ChatComponent';
 const { Pool } = pg;
 
-console.log(process.env.POSTGRES_CA_CERT);
-
 const config: PoolConfig = {
     host: process.env.POSTGRES_HOST,
     user: process.env.POSTGRES_USER,
