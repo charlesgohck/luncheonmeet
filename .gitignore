@@ -40,6 +40,6 @@ yarn-error.log*
 next-env.d.ts
 
 # Certificates
-db_cacert.cer
+ca-certificate.crt
 server*
 privkey*

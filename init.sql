@@ -1,4 +1,4 @@
-CREATE ROLE luncheonmeet_rw WITH LOGIN PASSWORD 'Password';
+CREATE ROLE luncheonmeet_rw WITH LOGIN PASSWORD 'Password'; -- With stronger psasword
 
 create database luncheonmeet;
 
@@ -20,7 +20,7 @@ create table luncheonmeet.dbo."user"
 comment on table luncheonmeet.dbo."user" is 'Stores user information';
 
 alter table luncheonmeet.dbo."user"
-    owner to postgres;
+    owner to luncheonmeet_rw;
 
 grant delete, insert, references, select, update on luncheonmeet.dbo."user" to luncheonmeet_rw;
 
@@ -34,7 +34,7 @@ create table luncheonmeet.dbo.verification
 );
 
 alter table luncheonmeet.dbo.verification
-    owner to postgres;
+    owner to luncheonmeet_rw;
 
 create table luncheonmeet.dbo.organization
 (
@@ -46,7 +46,7 @@ create table luncheonmeet.dbo.organization
 );
 
 alter table luncheonmeet.dbo.organization
-    owner to postgres;
+    owner to luncheonmeet_rw;
 
 create table luncheonmeet.dbo.meetup
 (
@@ -65,7 +65,7 @@ create table luncheonmeet.dbo.meetup
 );
 
 alter table luncheonmeet.dbo.meetup
-    owner to postgres;
+    owner to luncheonmeet_rw;
 
 create index meetup_start_time_index
     on luncheonmeet.dbo.meetup (start_time desc);
@@ -89,7 +89,7 @@ create table luncheonmeet.dbo.meetup_archive
 );
 
 alter table luncheonmeet.dbo.meetup_archive
-    owner to postgres;
+    owner to luncheonmeet_rw;
 
 create index meetup_archive_start_time_index
     on luncheonmeet.dbo.meetup_archive (start_time desc);
@@ -110,7 +110,7 @@ create table luncheonmeet.dbo.meetup_room_participant
 comment on table luncheonmeet.dbo.meetup_room_participant is 'Participants for meetup rooms';
 
 alter table luncheonmeet.dbo.meetup_room_participant
-    owner to postgres;
+    owner to luncheonmeet_rw;
 
 create index meetup_room_participant_joined_at_email_index
     on luncheonmeet.dbo.meetup_room_participant (joined_at desc, email asc);

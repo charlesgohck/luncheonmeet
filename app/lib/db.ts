@@ -7,6 +7,8 @@ import { InsertMeetupRoomParticipant } from '../components/JoinMeetButton';
 import { MeetingRoomMessage } from '../components/ChatComponent';
 const { Pool } = pg;
 
+console.log(process.env.POSTGRES_CA_CERT);
+
 const config: PoolConfig = {
     host: process.env.POSTGRES_HOST,
     user: process.env.POSTGRES_USER,
@@ -17,7 +19,10 @@ const config: PoolConfig = {
     idleTimeoutMillis: 30000,
     connectionTimeoutMillis: 10000,
     idle_in_transaction_session_timeout: 20000,
-    ssl: true
+    ssl: {
+        rejectUnauthorized: true,
+        ca: process.env.POSTGRES_CA_CERT,
+    }
 }
 
 export const dbPool = new Pool(config);
