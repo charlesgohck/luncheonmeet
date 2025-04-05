@@ -129,6 +129,8 @@ create table luncheonmeet.dbo.message
     timestamp       timestamptz
 );
 
+grant delete, insert, references, select, trigger, update on luncheonmeet.dbo.message to luncheonmeet_rw;
+
 comment on table dbo.message is 'Chat messages';
 
 create index message_meeting_room_id_timestamp_index
