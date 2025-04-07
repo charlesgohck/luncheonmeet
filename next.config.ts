@@ -15,7 +15,16 @@ const nextConfig: NextConfig = {
     fetches: {
       fullUrl: true
     }
-  }
+  },
+  reactStrictMode: true,
+  poweredByHeader: false,
+  webpack: (config, { isServer }) => {
+    // Allow WebSocket connections
+    if (!isServer) {
+      config.externals = [...(config.externals || []), 'socket.io-client'];
+    }
+    return config;
+  },
 };
 
 export default nextConfig;
